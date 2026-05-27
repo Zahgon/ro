@@ -17,7 +17,6 @@ package ro
 import (
 	"context"
 	"sync"
-	"sync/atomic"
 
 	"github.com/samber/lo"
 )
@@ -29,19 +28,7 @@ var _ Subject[int] = (*replaySubjectImpl[int])(nil)
 
 // NewReplaySubject emits old values to new subscribers.
 // After error or completion, new subscriptions receive values from the buffer then the error or the completion.
-func NewReplaySubject[T any](bufferSize int) Subject[T] {
-	return &replaySubjectImpl[T]{
-		mu:     sync.Mutex{},
-		status: KindNext,
-
-		observers:     sync.Map{},
-		observerIndex: 0,
-
-		err:        lo.Tuple2[context.Context, error]{},
-		values:     []lo.Tuple2[context.Context, T]{},
-		bufferSize: bufferSize,
-	}
-}
+func NewReplaySubject[T any](bufferSize int) Subject[T] { _ = "STUB: not implemented"; return nil }
 
 type replaySubjectImpl[T any] struct {
 	mu     sync.Mutex // sync.RWMutex would be better, but it is too slow for high-volume subjects
@@ -57,184 +44,81 @@ type replaySubjectImpl[T any] struct {
 
 // Implements Observable.
 func (s *replaySubjectImpl[T]) Subscribe(destination Observer[T]) Subscription {
-	return s.SubscribeWithContext(context.Background(), destination)
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
 
 // Implements Observable.
 func (s *replaySubjectImpl[T]) SubscribeWithContext(subscriberCtx context.Context, destination Observer[T]) Subscription {
-	subscription := NewSubscriber(destination)
-
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	for _, v := range s.values {
-		subscription.NextWithContext(v.A, v.B)
-	}
-
-	switch s.status {
-	case KindNext:
-		// fallthrough
-	case KindError:
-		subscription.ErrorWithContext(s.err.A, s.err.B)
-		return subscription
-	case KindComplete:
-		subscription.CompleteWithContext(subscriberCtx)
-		return subscription
-	}
-
-	index := atomic.AddUint32(&s.observerIndex, 1) - 1
-	s.observers.Store(index, subscription)
-
-	subscription.Add(func() {
-		s.observers.Delete(index)
-	})
-
-	return subscription
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
 
-func (s *replaySubjectImpl[T]) unsubscribeAll() {
-	s.observers.Range(func(key, value any) bool {
-		s.observers.Delete(key)
-		return true
-	})
-}
+// fallthrough
+
+func (s *replaySubjectImpl[T]) unsubscribeAll() { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
-func (s *replaySubjectImpl[T]) Next(value T) {
-	s.NextWithContext(context.Background(), value)
-}
+func (s *replaySubjectImpl[T]) Next(value T) { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
 func (s *replaySubjectImpl[T]) NextWithContext(ctx context.Context, value T) {
-	s.mu.Lock()
-
-	if s.status == KindNext {
-		s.broadcastNext(ctx, value)
-
-		s.values = append(s.values, lo.T2(ctx, value))
-		if s.bufferSize != ReplaySubjectUnlimitedBufferSize && len(s.values) > s.bufferSize {
-			OnDroppedNotification(ctx, NewNotificationNext(s.values[0].B))
-			s.values = s.values[len(s.values)-s.bufferSize:]
-		}
-	} else {
-		OnDroppedNotification(ctx, NewNotificationNext(value))
-	}
-
-	s.mu.Unlock()
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements Observer.
-func (s *replaySubjectImpl[T]) Error(err error) {
-	s.ErrorWithContext(context.Background(), err)
-}
+func (s *replaySubjectImpl[T]) Error(err error) { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
 func (s *replaySubjectImpl[T]) ErrorWithContext(ctx context.Context, err error) {
-	s.mu.Lock()
-
-	if s.status == KindNext {
-		s.err = lo.T2(ctx, err)
-		s.status = KindError
-		s.broadcastError(ctx, err)
-	} else {
-		OnDroppedNotification(ctx, NewNotificationError[T](err))
-	}
-
-	s.mu.Unlock()
-	s.unsubscribeAll()
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements Observer.
-func (s *replaySubjectImpl[T]) Complete() {
-	s.CompleteWithContext(context.Background())
-}
+func (s *replaySubjectImpl[T]) Complete() { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
 func (s *replaySubjectImpl[T]) CompleteWithContext(ctx context.Context) {
-	s.mu.Lock()
-
-	if s.status == KindNext {
-		s.status = KindComplete
-		s.broadcastComplete(ctx)
-	} else {
-		OnDroppedNotification(ctx, NewNotificationComplete[T]())
-	}
-
-	s.mu.Unlock()
-	s.unsubscribeAll()
+	_ = "STUB: not implemented"
+	return
 }
 
-func (s *replaySubjectImpl[T]) HasObserver() bool {
-	has := false
+func (s *replaySubjectImpl[T]) HasObserver() bool { _ = "STUB: not implemented"; return false }
 
-	s.observers.Range(func(key, value any) bool {
-		has = true
-		return false
-	})
-
-	return has
-}
-
-func (s *replaySubjectImpl[T]) CountObservers() int {
-	count := 0
-
-	s.observers.Range(func(key, value any) bool {
-		count++
-		return true
-	})
-
-	return count
-}
+func (s *replaySubjectImpl[T]) CountObservers() int { _ = "STUB: not implemented"; return 0 }
 
 // Implements Observer.
-func (s *replaySubjectImpl[T]) IsClosed() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	return s.status != KindNext
-}
+func (s *replaySubjectImpl[T]) IsClosed() bool { _ = "STUB: not implemented"; return false }
 
 // Implements Observer.
-func (s *replaySubjectImpl[T]) HasThrown() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	return s.status == KindError
-}
+func (s *replaySubjectImpl[T]) HasThrown() bool { _ = "STUB: not implemented"; return false }
 
 // Implements Observer.
-func (s *replaySubjectImpl[T]) IsCompleted() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+func (s *replaySubjectImpl[T]) IsCompleted() bool { _ = "STUB: not implemented"; return false }
 
-	return s.status == KindComplete
-}
+func (s *replaySubjectImpl[T]) AsObservable() Observable[T] { _ = "STUB: not implemented"; return nil }
 
-func (s *replaySubjectImpl[T]) AsObservable() Observable[T] {
-	return s
-}
-
-func (s *replaySubjectImpl[T]) AsObserver() Observer[T] {
-	return s
-}
+func (s *replaySubjectImpl[T]) AsObserver() Observer[T] { _ = "STUB: not implemented"; return nil }
 
 func (s *replaySubjectImpl[T]) broadcastNext(ctx context.Context, value T) {
-	s.observers.Range(func(_, observer any) bool {
-		observer.(Observer[T]).NextWithContext(ctx, value) //nolint:errcheck,forcetypeassert
-		return true
-	})
+	_ = "STUB: not implemented"
+	return
 }
+
+//nolint:errcheck,forcetypeassert
 
 func (s *replaySubjectImpl[T]) broadcastError(ctx context.Context, err error) {
-	s.observers.Range(func(_, observer any) bool {
-		observer.(Observer[T]).ErrorWithContext(ctx, err) //nolint:errcheck,forcetypeassert
-		return true
-	})
+	_ = "STUB: not implemented"
+	return
 }
 
+//nolint:errcheck,forcetypeassert
+
 func (s *replaySubjectImpl[T]) broadcastComplete(ctx context.Context) {
-	s.observers.Range(func(_, observer any) bool {
-		observer.(Observer[T]).CompleteWithContext(ctx) //nolint:errcheck,forcetypeassert
-		return true
-	})
+	_ = "STUB: not implemented"
+	return
 }
+
+//nolint:errcheck,forcetypeassert

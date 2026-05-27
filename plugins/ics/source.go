@@ -15,9 +15,6 @@
 package roics
 
 import (
-	"context"
-	"os"
-
 	ics "github.com/arran4/golang-ical"
 	"github.com/samber/ro"
 )
@@ -25,50 +22,12 @@ import (
 // NewICSFileReader reads events from one or more ICS files.
 // @TODO: add glob support
 func NewICSFileReader(paths ...string) ro.Observable[*ics.VEvent] {
-	return ro.NewUnsafeObservableWithContext(func(ctx context.Context, destination ro.Observer[*ics.VEvent]) ro.Teardown {
-		for _, path := range paths {
-			reader, err := os.Open(path)
-			if err != nil {
-				destination.ErrorWithContext(ctx, err)
-				break
-			}
-
-			defer reader.Close()
-
-			events, err := ics.ParseCalendar(reader)
-			if err != nil {
-				destination.ErrorWithContext(ctx, err)
-				break
-			}
-
-			for _, event := range events.Events() {
-				destination.NextWithContext(ctx, event)
-			}
-		}
-
-		destination.CompleteWithContext(ctx)
-
-		return nil
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewICSURLReader reads events from one or more ICS URLs.
 func NewICSURLReader(urls ...string) ro.Observable[*ics.VEvent] {
-	return ro.NewUnsafeObservableWithContext(func(ctx context.Context, destination ro.Observer[*ics.VEvent]) ro.Teardown {
-		for _, url := range urls {
-			events, err := ics.ParseCalendarFromUrl(url)
-			if err != nil {
-				destination.ErrorWithContext(ctx, err)
-				break
-			}
-
-			for _, event := range events.Events() {
-				destination.NextWithContext(ctx, event)
-			}
-		}
-
-		destination.CompleteWithContext(ctx)
-
-		return nil
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

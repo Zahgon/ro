@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rocsv
 
 import (
-	"context"
 	"encoding/csv"
-	"io"
 
 	"github.com/samber/ro"
 )
@@ -26,20 +23,6 @@ import (
 // NewCSVReader creates an observable that reads CSV records from a csv.Reader.
 // Play: https://go.dev/play/p/ZB3apy60Ujv
 func NewCSVReader(reader *csv.Reader) ro.Observable[[]string] {
-	return ro.NewUnsafeObservableWithContext(func(ctx context.Context, destination ro.Observer[[]string]) ro.Teardown {
-		for {
-			records, err := reader.Read()
-			if err != nil {
-				if err == io.EOF {
-					destination.CompleteWithContext(ctx)
-				} else {
-					destination.ErrorWithContext(ctx, err)
-				}
-				break
-			}
-			destination.NextWithContext(ctx, records)
-		}
-
-		return nil
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

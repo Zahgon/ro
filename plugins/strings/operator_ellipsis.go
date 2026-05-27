@@ -15,30 +15,14 @@
 package rostrings
 
 import (
-	"strings"
-
 	"github.com/samber/ro"
 )
 
-func ellipsis(str string, length int) string {
-	str = strings.TrimSpace(str)
-
-	if len(str) > length {
-		if len(str) < 3 || length < 3 {
-			return "..."
-		}
-		return strings.TrimSpace(str[0:length-3]) + "..."
-	}
-
-	return str
-}
+func ellipsis(str string, length int) string { _ = "STUB: not implemented"; return "" }
 
 // Ellipsis truncates the string to the specified length and appends "..." if the string is longer than the specified length.
 // Play: https://go.dev/play/p/Yqx1pUep0uX
 func Ellipsis[T ~string](length int) func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(ellipsis(string(value), length))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

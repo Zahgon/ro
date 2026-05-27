@@ -17,7 +17,6 @@ package ro
 import (
 	"context"
 	"sync"
-	"sync/atomic"
 
 	"github.com/samber/lo"
 )
@@ -26,17 +25,7 @@ var _ Subject[int] = (*publishSubjectImpl[int])(nil)
 
 // NewPublishSubject broadcasts a value to observers (fanout).
 // Values received before subscription are not transmitted.
-func NewPublishSubject[T any]() Subject[T] {
-	return &publishSubjectImpl[T]{
-		mu:     sync.Mutex{},
-		status: KindNext,
-
-		observers:     sync.Map{},
-		observerIndex: 0,
-
-		err: lo.Tuple2[context.Context, error]{},
-	}
-}
+func NewPublishSubject[T any]() Subject[T] { _ = "STUB: not implemented"; return nil }
 
 type publishSubjectImpl[T any] struct {
 	mu     sync.Mutex // sync.RWMutex would be better, but it is too slow for high-volume subjects
@@ -50,174 +39,81 @@ type publishSubjectImpl[T any] struct {
 
 // Implements Observable.
 func (s *publishSubjectImpl[T]) Subscribe(destination Observer[T]) Subscription {
-	return s.SubscribeWithContext(context.Background(), destination)
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
 
 // Implements Observable.
 func (s *publishSubjectImpl[T]) SubscribeWithContext(subscriberCtx context.Context, destination Observer[T]) Subscription {
-	subscription := NewSubscriber(destination)
-
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	switch s.status {
-	case KindNext:
-		// fallthrough
-	case KindError:
-		subscription.ErrorWithContext(s.err.A, s.err.B)
-		return subscription
-	case KindComplete:
-		subscription.CompleteWithContext(subscriberCtx)
-		return subscription
-	}
-
-	index := atomic.AddUint32(&s.observerIndex, 1) - 1
-	s.observers.Store(index, subscription)
-
-	subscription.Add(func() {
-		s.observers.Delete(index)
-	})
-
-	return subscription
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
 
-func (s *publishSubjectImpl[T]) unsubscribeAll() {
-	s.observers.Range(func(key, _ any) bool {
-		s.observers.Delete(key)
-		return true
-	})
-}
+// fallthrough
+
+func (s *publishSubjectImpl[T]) unsubscribeAll() { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
-func (s *publishSubjectImpl[T]) Next(value T) {
-	s.NextWithContext(context.Background(), value)
-}
+func (s *publishSubjectImpl[T]) Next(value T) { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
 func (s *publishSubjectImpl[T]) NextWithContext(ctx context.Context, value T) {
-	s.mu.Lock()
-
-	if s.status == KindNext {
-		s.broadcastNext(ctx, value)
-	} else {
-		OnDroppedNotification(ctx, NewNotificationNext(value))
-	}
-
-	s.mu.Unlock()
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements Observer.
-func (s *publishSubjectImpl[T]) Error(err error) {
-	s.ErrorWithContext(context.Background(), err)
-}
+func (s *publishSubjectImpl[T]) Error(err error) { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
 func (s *publishSubjectImpl[T]) ErrorWithContext(ctx context.Context, err error) {
-	s.mu.Lock()
-
-	if s.status == KindNext {
-		s.err = lo.T2(ctx, err)
-		s.status = KindError
-		s.broadcastError(ctx, err)
-	} else {
-		OnDroppedNotification(ctx, NewNotificationError[T](err))
-	}
-
-	s.mu.Unlock()
-	s.unsubscribeAll()
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements Observer.
-func (s *publishSubjectImpl[T]) Complete() {
-	s.CompleteWithContext(context.Background())
-}
+func (s *publishSubjectImpl[T]) Complete() { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
 func (s *publishSubjectImpl[T]) CompleteWithContext(ctx context.Context) {
-	s.mu.Lock()
-
-	if s.status == KindNext {
-		s.status = KindComplete
-		s.broadcastComplete(ctx)
-	} else {
-		OnDroppedNotification(ctx, NewNotificationComplete[T]())
-	}
-
-	s.mu.Unlock()
-	s.unsubscribeAll()
+	_ = "STUB: not implemented"
+	return
 }
 
-func (s *publishSubjectImpl[T]) HasObserver() (has bool) {
-	has = false
+func (s *publishSubjectImpl[T]) HasObserver() (has bool) { _ = "STUB: not implemented"; return false }
 
-	s.observers.Range(func(key, value any) bool {
-		has = true
-		return false
-	})
-
-	return has
-}
-
-func (s *publishSubjectImpl[T]) CountObservers() int {
-	count := 0
-
-	s.observers.Range(func(key, value any) bool {
-		count++
-		return true
-	})
-
-	return count
-}
+func (s *publishSubjectImpl[T]) CountObservers() int { _ = "STUB: not implemented"; return 0 }
 
 // Implements Observer.
-func (s *publishSubjectImpl[T]) IsClosed() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	return s.status != KindNext
-}
+func (s *publishSubjectImpl[T]) IsClosed() bool { _ = "STUB: not implemented"; return false }
 
 // Implements Observer.
-func (s *publishSubjectImpl[T]) HasThrown() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	return s.status == KindError
-}
+func (s *publishSubjectImpl[T]) HasThrown() bool { _ = "STUB: not implemented"; return false }
 
 // Implements Observer.
-func (s *publishSubjectImpl[T]) IsCompleted() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+func (s *publishSubjectImpl[T]) IsCompleted() bool { _ = "STUB: not implemented"; return false }
 
-	return s.status == KindComplete
-}
+func (s *publishSubjectImpl[T]) AsObservable() Observable[T] { _ = "STUB: not implemented"; return nil }
 
-func (s *publishSubjectImpl[T]) AsObservable() Observable[T] {
-	return s
-}
-
-func (s *publishSubjectImpl[T]) AsObserver() Observer[T] {
-	return s
-}
+func (s *publishSubjectImpl[T]) AsObserver() Observer[T] { _ = "STUB: not implemented"; return nil }
 
 func (s *publishSubjectImpl[T]) broadcastNext(ctx context.Context, value T) {
-	s.observers.Range(func(_, observer any) bool {
-		observer.(Observer[T]).NextWithContext(ctx, value) //nolint:errcheck,forcetypeassert
-		return true
-	})
+	_ = "STUB: not implemented"
+	return
 }
+
+//nolint:errcheck,forcetypeassert
 
 func (s *publishSubjectImpl[T]) broadcastError(ctx context.Context, err error) {
-	s.observers.Range(func(_, observer any) bool {
-		observer.(Observer[T]).ErrorWithContext(ctx, err) //nolint:errcheck,forcetypeassert
-		return true
-	})
+	_ = "STUB: not implemented"
+	return
 }
 
+//nolint:errcheck,forcetypeassert
+
 func (s *publishSubjectImpl[T]) broadcastComplete(ctx context.Context) {
-	s.observers.Range(func(_, observer any) bool {
-		observer.(Observer[T]).CompleteWithContext(ctx) //nolint:errcheck,forcetypeassert
-		return true
-	})
+	_ = "STUB: not implemented"
+	return
 }
+
+//nolint:errcheck,forcetypeassert

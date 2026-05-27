@@ -14,12 +14,6 @@
 
 package ro
 
-import (
-	"context"
-	"sync"
-	"sync/atomic"
-)
-
 // ShareConfig is the configuration for the Share operator.
 type ShareConfig[T any] struct {
 	Connector           func() Subject[T]
@@ -36,14 +30,7 @@ type ShareConfig[T any] struct {
 //
 // This is an alias for ShareWithConfig with default configuration.
 // Play: https://go.dev/play/p/C34fv02jAIH
-func Share[T any]() func(Observable[T]) Observable[T] {
-	return ShareWithConfig(ShareConfig[T]{
-		Connector:           defaultConnector[T],
-		ResetOnError:        true,
-		ResetOnComplete:     true,
-		ResetOnRefCountZero: true,
-	})
-}
+func Share[T any]() func(Observable[T]) Observable[T] { _ = "STUB: not implemented"; return nil }
 
 // ShareWithConfig creates a new Observable that multicasts (shares) the
 // original Observable. As long as there is at least one subscription to the
@@ -65,120 +52,38 @@ func Share[T any]() func(Observable[T]) Observable[T] {
 //
 // Play: https://go.dev/play/p/C34fv02jAIH
 func ShareWithConfig[T any](config ShareConfig[T]) func(Observable[T]) Observable[T] {
-	if config.Connector == nil {
-		panic(ErrConnectableObservableMissingConnectorFactory)
-	}
-
-	return func(source Observable[T]) Observable[T] {
-		// Subscriptions to `source` can be concurrent, so we protect shared
-		// objects against race conditions.
-		var mu sync.Mutex
-		// var subject atomic.Pointer[Subject[T]]
-		var subject Subject[T]
-		var sourceSubscription Subscription // subscription between the source and the subject
-
-		refCount := 0 // not an atomic counter, because it is protected by mutex
-
-		var hasBeenResetOnError int32      // atomic.Bool is not available in Go 1.18
-		var hasBeenResetOnCompletion int32 // atomic.Bool is not available in Go 1.18
-
-		// Unsafe: must be called in a mutex lock.
-		getOrCreateSubject := func() (Subject[T], Subscription, bool) {
-			if subject == nil || sourceSubscription == nil {
-				subject = config.Connector()
-				sourceSubscription = NewSubscription(nil)
-
-				return subject, sourceSubscription, true
-			}
-
-			return subject, sourceSubscription, false
-		}
-
-		// Unsafe: must be called in a mutex lock.
-		reset := func(currentSubject Subject[T], currentSourceSubscription Subscription) {
-			// never nil
-			currentSourceSubscription.Unsubscribe()
-
-			if currentSourceSubscription == sourceSubscription {
-				sourceSubscription = nil
-			}
-
-			if currentSubject == subject {
-				subject = nil
-			}
-		}
-
-		return NewObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			mu.Lock()
-
-			refCount++
-			// `currentSubject` is a backup (local reference) of `subject`
-			// to manipulate it even after reset.
-			currentSubject, currentSourceSubscription, createdSubject := getOrCreateSubject()
-
-			mu.Unlock()
-
-			// Expected to be non-blocking.
-			// This is the subscription between the subject and the new observer.
-			sub := currentSubject.SubscribeWithContext(subscriberCtx, destination)
-
-			if createdSubject {
-				atomic.StoreInt32(&hasBeenResetOnError, 0)
-				atomic.StoreInt32(&hasBeenResetOnCompletion, 0)
-
-				// We need to handle errors and completion so we added a
-				// proxy observer between source and subject.
-				proxy := NewSubscriber(
-					NewObserverWithContext(
-						currentSubject.NextWithContext,
-						func(ctx context.Context, err error) {
-							if config.ResetOnError {
-								mu.Lock()
-								reset(currentSubject, currentSourceSubscription)
-								mu.Unlock()
-							} else {
-								atomic.StoreInt32(&hasBeenResetOnError, 1)
-							}
-
-							currentSubject.ErrorWithContext(ctx, err)
-						},
-						func(ctx context.Context) {
-							if config.ResetOnComplete {
-								mu.Lock()
-								reset(currentSubject, currentSourceSubscription)
-								mu.Unlock()
-							} else {
-								atomic.StoreInt32(&hasBeenResetOnCompletion, 1)
-							}
-
-							currentSubject.CompleteWithContext(ctx)
-						},
-					),
-				)
-
-				// Subscription between the source and the subject.
-				sourceSubscription.AddUnsubscribable(
-					source.SubscribeWithContext(subscriberCtx, proxy),
-				)
-			}
-
-			return func() {
-				sub.Unsubscribe()
-
-				mu.Lock()
-
-				refCount--
-				if config.ResetOnRefCountZero {
-					if refCount == 0 && atomic.LoadInt32(&hasBeenResetOnError) == 0 && atomic.LoadInt32(&hasBeenResetOnCompletion) == 0 {
-						reset(currentSubject, currentSourceSubscription)
-					}
-				}
-
-				mu.Unlock()
-			}
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Subscriptions to `source` can be concurrent, so we protect shared
+// objects against race conditions.
+
+// var subject atomic.Pointer[Subject[T]]
+
+// subscription between the source and the subject
+
+// not an atomic counter, because it is protected by mutex
+
+// atomic.Bool is not available in Go 1.18
+// atomic.Bool is not available in Go 1.18
+
+// Unsafe: must be called in a mutex lock.
+
+// Unsafe: must be called in a mutex lock.
+
+// never nil
+
+// `currentSubject` is a backup (local reference) of `subject`
+// to manipulate it even after reset.
+
+// Expected to be non-blocking.
+// This is the subscription between the subject and the new observer.
+
+// We need to handle errors and completion so we added a
+// proxy observer between source and subject.
+
+// Subscription between the source and the subject.
 
 // ShareReplayConfig is the configuration for the ShareReplay operator.
 type ShareReplayConfig struct {
@@ -195,16 +100,8 @@ type ShareReplayConfig struct {
 // This is an alias for ShareReplayWithConfig with default configuration.
 // Play: https://go.dev/play/p/QmsDbChzRgu
 func ShareReplay[T any](bufferSize int) func(Observable[T]) Observable[T] {
-	return ShareWithConfig(
-		ShareConfig[T]{
-			Connector: func() Subject[T] {
-				return NewReplaySubject[T](bufferSize)
-			},
-			ResetOnError:        true,
-			ResetOnComplete:     false,
-			ResetOnRefCountZero: false,
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ShareReplayWithConfig creates a new Observable that multicasts (shares) the
@@ -222,14 +119,6 @@ func ShareReplay[T any](bufferSize int) func(Observable[T]) Observable[T] {
 //
 // Play: https://go.dev/play/p/QmsDbChzRgu
 func ShareReplayWithConfig[T any](bufferSize int, config ShareReplayConfig) func(Observable[T]) Observable[T] {
-	return ShareWithConfig(
-		ShareConfig[T]{
-			Connector: func() Subject[T] {
-				return NewReplaySubject[T](bufferSize)
-			},
-			ResetOnError:        true,
-			ResetOnComplete:     false,
-			ResetOnRefCountZero: config.ResetOnRefCountZero,
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

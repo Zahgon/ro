@@ -16,29 +16,25 @@
 
 package xrand
 
-import "math/rand"
-
 // IntN is a wrapper around rand.Intn that is only available in Go 1.22 and later.
 func IntN(n int) int {
+	_ = "STUB: not implemented"
 	// bearer:disable go_gosec_crypto_weak_random
-	return rand.Intn(n)
+	return 0
 }
 
 // Int64 is a wrapper around rand.Int63 that is only available in Go 1.22 and later.
 func Int64() int64 {
+	_ = "STUB: not implemented"
 	// bearer:disable go_gosec_crypto_weak_random
-	n := rand.Int63()
-
-	// bearer:disable go_gosec_crypto_weak_random
-	if rand.Intn(2) == 0 {
-		return -n
-	}
-
-	return n
+	return 0
 }
+
+// bearer:disable go_gosec_crypto_weak_random
 
 // Float64 is a wrapper around rand.Float64 that is only available in Go 1.22 and later.
 func Float64() float64 {
+	_ = "STUB: not implemented"
 	// bearer:disable go_gosec_crypto_weak_random
-	return rand.Float64()
+	return 0
 }

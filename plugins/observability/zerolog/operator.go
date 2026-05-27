@@ -12,48 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rozerolog
 
 import (
-	"context"
-
 	"github.com/rs/zerolog"
 	"github.com/samber/ro"
 )
 
 func Log[T any](logger *zerolog.Logger, level zerolog.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			logger.WithLevel(level).Msgf("ro.Next: %v", value)
-		},
-		func(ctx context.Context, err error) {
-			logger.WithLevel(level).Msgf("ro.Error: %s", err.Error())
-		},
-		func(ctx context.Context) {
-			logger.WithLevel(level).Msgf("ro.Complete")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func LogWithNotification[T any](logger *zerolog.Logger, level zerolog.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			logger.WithLevel(level).Any("value", value).Msgf("ro.Next")
-		},
-		func(ctx context.Context, err error) {
-			logger.WithLevel(level).Err(err).Msgf("ro.Error")
-		},
-		func(ctx context.Context) {
-			logger.WithLevel(level).Msgf("ro.Complete")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func FatalOnError[T any](logger *zerolog.Logger) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapOnErrorWithContext[T](
-		func(ctx context.Context, err error) {
-			logger.Fatal().Err(err).Msgf("ro.Error")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

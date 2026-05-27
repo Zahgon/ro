@@ -15,25 +15,14 @@
 package rostrings
 
 import (
-	"strings"
-
 	"github.com/samber/ro"
 )
 
-func pascalCase(str string) string {
-	items := words(str)
-	for i := range items {
-		items[i] = capitalize(items[i])
-	}
-	return strings.Join(items, "")
-}
+func pascalCase(str string) string { _ = "STUB: not implemented"; return "" }
 
 // PascalCase converts the string to pascal case.
 // Play: https://go.dev/play/p/107SvPGvHAK
 func PascalCase[T ~string]() func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(pascalCase(string(value)))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

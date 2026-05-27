@@ -12,37 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rotemplate
 
 import (
-	"bytes"
-	htmltemplate "html/template"
-	texttemplate "text/template"
-
 	"github.com/samber/ro"
 )
 
 // TextTemplate creates a text template operator that renders templates with input data.
 // Play: https://go.dev/play/p/06cCGj34vLo
 func TextTemplate[T any](template string) func(ro.Observable[T]) ro.Observable[string] {
-	tpl := texttemplate.Must(texttemplate.New(template).Parse(template))
-
-	return ro.MapErr(func(v T) (string, error) {
-		var buf bytes.Buffer
-		err := tpl.Execute(&buf, v)
-		return buf.String(), err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // HTMLTemplate creates an HTML template operator that renders templates with input data.
 // Play: https://go.dev/play/p/emlON8wyaXx
 func HTMLTemplate[T any](template string) func(ro.Observable[T]) ro.Observable[string] {
-	tpl := htmltemplate.Must(htmltemplate.New(template).Parse(template))
-
-	return ro.MapErr(func(v T) (string, error) {
-		var buf bytes.Buffer
-		err := tpl.Execute(&buf, v)
-		return buf.String(), err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

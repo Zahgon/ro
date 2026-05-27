@@ -15,25 +15,14 @@
 package robytes
 
 import (
-	"bytes"
-
 	"github.com/samber/ro"
 )
 
-func kebabCase(str []byte) []byte {
-	items := words(str)
-	for i := range items {
-		items[i] = bytes.ToLower(items[i])
-	}
-	return bytes.Join(items, []byte("-"))
-}
+func kebabCase(str []byte) []byte { _ = "STUB: not implemented"; return nil }
 
 // KebabCase converts the string to kebab case.
 // Play: https://go.dev/play/p/CeGTAyeZu2W
 func KebabCase[T ~[]byte]() func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(kebabCase(value))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

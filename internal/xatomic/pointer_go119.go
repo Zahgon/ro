@@ -25,30 +25,29 @@ type Pointer[T any] struct {
 }
 
 // NewPointer returns a new Pointer[T] initialized with the given value.
-func NewPointer[T any](v *T) *Pointer[T] {
-	var p Pointer[T]
-	p.Store(v)
-	return &p
-}
+func NewPointer[T any](v *T) *Pointer[T] { _ = "STUB: not implemented"; return nil }
 
 // Load returns the value stored in the pointer atomically.
 func (x *Pointer[T]) Load() *T {
-	return x.p.Load()
+	_ = "STUB: not implemented"
+
+	// Store stores the value in the pointer atomically.
+	return nil
 }
 
-// Store stores the value in the pointer atomically.
 func (x *Pointer[T]) Store(val *T) {
-	x.p.Store(val)
+	_ = "STUB: not implemented"
+
+	// Swap swaps the value in the pointer with the new value and returns the old value atomically.
+	return
 }
 
-// Swap swaps the value in the pointer with the new value and returns the old value atomically.
-func (x *Pointer[T]) Swap(val *T) (old *T) {
-	return x.p.Swap(val)
-}
+func (x *Pointer[T]) Swap(val *T) (old *T) { _ = "STUB: not implemented"; return nil }
 
 // CompareAndSwap performs a compare-and-swap operation on the pointer atomically.
 // It stores new in the pointer if the current value is equal to old.
 // It returns true if the swap was performed, false otherwise.
 func (x *Pointer[T]) CompareAndSwap(old, nEw *T) (swapped bool) {
-	return x.p.CompareAndSwap(old, nEw)
+	_ = "STUB: not implemented"
+	return false
 }

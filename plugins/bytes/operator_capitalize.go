@@ -16,20 +16,13 @@ package robytes
 
 import (
 	"github.com/samber/ro"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
-func capitalize(str []byte) []byte {
-	return cases.Title(language.English).Bytes(str)
-}
+func capitalize(str []byte) []byte { _ = "STUB: not implemented"; return nil }
 
 // Capitalize capitalizes the first letter of the string.
 // Play: https://go.dev/play/p/gAKIElJIUun
 func Capitalize[T ~[]byte]() func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(capitalize(value))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

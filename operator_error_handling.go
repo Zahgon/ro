@@ -16,7 +16,6 @@ package ro
 
 import (
 	"context"
-	"sync/atomic"
 	"time"
 )
 
@@ -24,28 +23,8 @@ import (
 // or throwing an error.
 // Play: https://go.dev/play/p/0pVlxwjhdMT
 func Catch[T any](finally func(err error) Observable[T]) func(Observable[T]) Observable[T] {
-	return func(source Observable[T]) Observable[T] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			subscriptions := NewSubscription(nil)
-
-			subscriptions.AddUnsubscribable(
-				source.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						destination.NextWithContext,
-						func(ctx context.Context, err error) {
-							subscriptions.AddUnsubscribable(
-								finally(err).SubscribeWithContext(ctx, destination),
-							)
-						},
-						destination.CompleteWithContext,
-					),
-				),
-			)
-
-			return subscriptions.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnErrorResumeNextWith instructs an Observable to begin emitting a second
@@ -53,92 +32,30 @@ func Catch[T any](finally func(err error) Observable[T]) func(Observable[T]) Obs
 // subscribes to the next one that was passed.
 // Play: https://go.dev/play/p/9XLTAOginbK
 func OnErrorResumeNextWith[T any](finally ...Observable[T]) func(Observable[T]) Observable[T] {
-	return func(source Observable[T]) Observable[T] {
-		if len(finally) == 0 {
-			return source
-		}
-
-		finally = append([]Observable[T]{source}, finally...)
-
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			subscriptions := NewSubscription(nil)
-
-			var lastCtx context.Context
-
-			var err error
-
-			for i := range finally {
-				if subscriptions.IsClosed() {
-					break
-				}
-
-				err = nil
-
-				sub := finally[i].SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						destination.NextWithContext,
-						func(ctx context.Context, e error) {
-							err = e
-							lastCtx = ctx
-						},
-						func(ctx context.Context) {
-							lastCtx = ctx
-						},
-					),
-				)
-
-				// `subscriptions` cancels `sub` when it unsubscribes
-				// but `sub` cannot unsubscribe `subscriptions`
-				subscriptions.AddUnsubscribable(sub)
-				sub.Wait()
-			}
-
-			if err != nil {
-				destination.ErrorWithContext(lastCtx, err)
-			} else {
-				destination.CompleteWithContext(lastCtx)
-			}
-
-			return subscriptions.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// `subscriptions` cancels `sub` when it unsubscribes
+// but `sub` cannot unsubscribe `subscriptions`
 
 // OnErrorReturn instructs an Observable to emit a particular item when it
 // encounters an error. It will then complete the sequence.
 // Play: https://go.dev/play/p/d_9xe1oedjU
 func OnErrorReturn[T any](finally T) func(Observable[T]) Observable[T] {
-	return func(source Observable[T]) Observable[T] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					destination.NextWithContext,
-					func(ctx context.Context, err error) {
-						destination.NextWithContext(ctx, finally)
-						destination.CompleteWithContext(ctx)
-					},
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Retry resubscribes to the source observable when it encounters an error.
 // It will retry infinitely. If you want to limit the number of retries, use
 // RetryWithConfig.
 // Play: https://go.dev/play/p/Llj9dT9Y3Z2
-func Retry[T any]() func(Observable[T]) Observable[T] {
-	return RetryWithConfig[T](RetryConfig{
-		MaxRetries:     0,     // unlimited
-		Delay:          0,     // disabled
-		ResetOnSuccess: false, // disabled because it retries infinitely
-	})
-}
+func Retry[T any]() func(Observable[T]) Observable[T] { _ = "STUB: not implemented"; return nil }
+
+// unlimited
+// disabled
+// disabled because it retries infinitely
 
 // RetryConfig is the configuration for the Retry operator.
 type RetryConfig struct {
@@ -154,70 +71,17 @@ type RetryConfig struct {
 // emitted.
 // Play: https://go.dev/play/p/GilWi5xG0lr
 func RetryWithConfig[T any](opts RetryConfig) func(Observable[T]) Observable[T] {
-	return func(source Observable[T]) Observable[T] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			subscriptions := NewSubscription(nil)
-			retries := uint64(0)
-
-			for !subscriptions.IsClosed() {
-				// Check for context cancellation before retrying
-				select {
-				case <-subscriberCtx.Done():
-					destination.ErrorWithContext(subscriberCtx, subscriberCtx.Err())
-					return subscriptions.Unsubscribe
-				default:
-				}
-
-				var shouldRetry bool
-				var lastErr error
-
-				sub := source.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value T) {
-							if opts.ResetOnSuccess {
-								retries = 0
-							}
-							destination.NextWithContext(ctx, value)
-						},
-						func(ctx context.Context, err error) {
-							lastErr = err
-							retries++
-							shouldRetry = opts.MaxRetries == 0 || retries <= opts.MaxRetries
-						},
-						func(ctx context.Context) {
-							destination.CompleteWithContext(ctx)
-						},
-					),
-				)
-
-				subscriptions.AddUnsubscribable(sub)
-				sub.Wait()
-
-				if lastErr != nil {
-					if shouldRetry {
-						if opts.Delay > 0 {
-							// Use context-aware sleep that can be cancelled
-							select {
-							case <-time.After(opts.Delay):
-								// Continue to next iteration
-							case <-subscriberCtx.Done():
-								destination.ErrorWithContext(subscriberCtx, subscriberCtx.Err())
-								return subscriptions.Unsubscribe
-							}
-						}
-						// Continue to next iteration
-						continue
-					}
-					destination.ErrorWithContext(subscriberCtx, lastErr)
-				}
-				break
-			}
-
-			return subscriptions.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Check for context cancellation before retrying
+
+// Use context-aware sleep that can be cancelled
+
+// Continue to next iteration
+
+// Continue to next iteration
 
 // ThrowIfEmpty throws an error if the source observable is empty. It will
 // throw the error returned by the throw function. If the source observable
@@ -225,30 +89,8 @@ func RetryWithConfig[T any](opts RetryConfig) func(Observable[T]) Observable[T] 
 // it will propagate the error.
 // Play: https://go.dev/play/p/mLCaC7p_6p4
 func ThrowIfEmpty[T any](throw func() error) func(Observable[T]) Observable[T] {
-	return func(source Observable[T]) Observable[T] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			count := uint64(0)
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						atomic.AddUint64(&count, 1)
-						destination.NextWithContext(ctx, value)
-					},
-					destination.ErrorWithContext,
-					func(ctx context.Context) {
-						if atomic.LoadUint64(&count) == 0 {
-							destination.ErrorWithContext(ctx, throw())
-						} else {
-							destination.CompleteWithContext(ctx)
-						}
-					},
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DoWhile repeats the source observable while the condition is true. It will
@@ -257,9 +99,8 @@ func ThrowIfEmpty[T any](throw func() error) func(Observable[T]) Observable[T] {
 // emits an error.
 // Play: https://go.dev/play/p/nEWabaItDpn
 func DoWhile[T any](condition func() bool) func(Observable[T]) Observable[T] {
-	return DoWhileI[T](func(_ int64) bool {
-		return condition()
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DoWhileWithContext repeats the source observable while the condition is true. It will
@@ -267,9 +108,8 @@ func DoWhile[T any](condition func() bool) func(Observable[T]) Observable[T] {
 // source observable is empty. It will not emit any values if the source observable
 // emits an error.
 func DoWhileWithContext[T any](condition func(ctx context.Context) (context.Context, bool)) func(Observable[T]) Observable[T] {
-	return DoWhileIWithContext[T](func(ctx context.Context, _ int64) (context.Context, bool) {
-		return condition(ctx)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DoWhileI repeats the source observable while the condition is true. It will
@@ -278,9 +118,8 @@ func DoWhileWithContext[T any](condition func(ctx context.Context) (context.Cont
 // emits an error.
 // Play: https://go.dev/play/p/cxOA9gimkCq
 func DoWhileI[T any](condition func(index int64) bool) func(Observable[T]) Observable[T] {
-	return DoWhileIWithContext[T](func(ctx context.Context, index int64) (context.Context, bool) {
-		return ctx, condition(index)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DoWhileIWithContext repeats the source observable while the condition is true. It will
@@ -289,59 +128,13 @@ func DoWhileI[T any](condition func(index int64) bool) func(Observable[T]) Obser
 // emits an error.
 // Play: https://go.dev/play/p/yMoCCnnvRRH
 func DoWhileIWithContext[T any](condition func(ctx context.Context, index int64) (context.Context, bool)) func(Observable[T]) Observable[T] {
-	return func(source Observable[T]) Observable[T] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			i := int64(0)
-			subscriptions := NewSubscription(nil)
-			currentCtx := subscriberCtx
-			shouldContinue := true
-			var lastErr error
-
-			for shouldContinue {
-				if subscriptions.IsClosed() {
-					break
-				}
-
-				var completed bool
-
-				sub := source.SubscribeWithContext(
-					currentCtx,
-					NewObserverWithContext(
-						destination.NextWithContext,
-						func(ctx context.Context, err error) {
-							lastErr = err
-							destination.ErrorWithContext(ctx, err)
-						},
-						func(ctx context.Context) {
-							currentCtx, shouldContinue = condition(ctx, i)
-							completed = true
-							i++
-						},
-					),
-				)
-
-				subscriptions.AddUnsubscribable(sub)
-				sub.Wait()
-
-				if lastErr != nil {
-					// Source emitted an error, stop the loop
-					break
-				}
-
-				if completed && !shouldContinue {
-					// Condition is false, stop the loop
-					break
-				}
-			}
-
-			if lastErr == nil {
-				destination.CompleteWithContext(currentCtx)
-			}
-
-			return subscriptions.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Source emitted an error, stop the loop
+
+// Condition is false, stop the loop
 
 // While repeats the source observable while the condition is true. It will
 // complete when the condition is false. It will not emit any values if the
@@ -349,9 +142,8 @@ func DoWhileIWithContext[T any](condition func(ctx context.Context, index int64)
 // emits an error.
 // Play: https://go.dev/play/p/hMj3DBVtp73
 func While[T any](condition func() bool) func(Observable[T]) Observable[T] {
-	return WhileIWithContext[T](func(ctx context.Context, _ int64) (context.Context, bool) {
-		return ctx, condition()
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // WhileWithContext repeats the source observable while the condition is true. It will
@@ -359,9 +151,8 @@ func While[T any](condition func() bool) func(Observable[T]) Observable[T] {
 // source observable is empty. It will not emit any values if the source observable
 // emits an error.
 func WhileWithContext[T any](condition func(ctx context.Context) (context.Context, bool)) func(Observable[T]) Observable[T] {
-	return WhileIWithContext[T](func(ctx context.Context, _ int64) (context.Context, bool) {
-		return condition(ctx)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // WhileI repeats the source observable while the condition is true. It will
@@ -370,9 +161,8 @@ func WhileWithContext[T any](condition func(ctx context.Context) (context.Contex
 // emits an error.
 // Play: https://go.dev/play/p/9aAuzAspyMc
 func WhileI[T any](condition func(index int64) bool) func(Observable[T]) Observable[T] {
-	return WhileIWithContext[T](func(ctx context.Context, index int64) (context.Context, bool) {
-		return ctx, condition(index)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // WhileIWithContext repeats the source observable while the condition is true. It will
@@ -381,55 +171,12 @@ func WhileI[T any](condition func(index int64) bool) func(Observable[T]) Observa
 // emits an error.
 // Play: https://go.dev/play/p/xTpqdGSxOxw
 func WhileIWithContext[T any](condition func(ctx context.Context, index int64) (context.Context, bool)) func(Observable[T]) Observable[T] {
-	return func(source Observable[T]) Observable[T] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			i := int64(0)
-			subscriptions := NewSubscription(nil)
-			currentCtx := subscriberCtx
-			var lastErr error
-
-			for !subscriptions.IsClosed() {
-				var nextCtx context.Context
-				var shouldContinue bool
-				nextCtx, shouldContinue = condition(currentCtx, i)
-
-				if !shouldContinue {
-					// Condition is false, stop the loop
-					break
-				}
-
-				i++
-
-				sub := source.SubscribeWithContext(
-					nextCtx,
-					NewObserverWithContext(
-						destination.NextWithContext,
-						func(ctx context.Context, err error) {
-							lastErr = err
-							destination.ErrorWithContext(ctx, err)
-						},
-						func(ctx context.Context) {
-							// Source completed normally
-						},
-					),
-				)
-
-				subscriptions.AddUnsubscribable(sub)
-				sub.Wait()
-
-				if lastErr != nil {
-					// Source emitted an error, stop the loop
-					break
-				}
-
-				currentCtx = nextCtx
-			}
-
-			if lastErr == nil {
-				destination.CompleteWithContext(currentCtx)
-			}
-
-			return subscriptions.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Condition is false, stop the loop
+
+// Source completed normally
+
+// Source emitted an error, stop the loop

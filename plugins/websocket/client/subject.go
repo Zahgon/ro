@@ -16,7 +16,6 @@ package rowebsocketclient
 
 import (
 	"context"
-	"net/http"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -44,31 +43,11 @@ type WebsocketSubjectConfig[In any, Out any] struct {
 
 // NewWebsocketSubject creates a websocket subject that can both send and receive messages from a websocket endpoint.
 func NewWebsocketSubject[In any, Out any](config WebsocketSubjectConfig[In, Out]) *websocketSubject[In, Out] {
-	if config.URL == "" {
-		panic("rowebsocket.NewWebsocketSubject: URL is required")
-	}
-	if config.Serializer == nil {
-		panic("rowebsocket.NewWebsocketSubject: Serializer is required")
-	}
-	if config.Deserializer == nil {
-		panic("rowebsocket.NewWebsocketSubject: Deserializer is required")
-	}
-	if config.Dialer == nil {
-		config.Dialer = websocket.DefaultDialer
-	}
-
-	// Set default output connector
-	if config.OutputConnector == nil {
-		config.OutputConnector = func() ro.Subject[Out] {
-			return ro.NewPublishSubject[Out]()
-		}
-	}
-
-	return &websocketSubject[In, Out]{
-		config: config,
-		output: nil,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Set default output connector
 
 var _ ro.Subject[string] = (*websocketSubject[string, string])(nil)
 var _ ro.Observer[string] = (*websocketSubject[string, int])(nil)
@@ -84,191 +63,91 @@ type websocketSubject[In any, Out any] struct {
 
 // Implements ro.Observable[Out]
 func (ws *websocketSubject[In, Out]) Subscribe(destination ro.Observer[Out]) ro.Subscription {
-	return ws.SubscribeWithContext(context.Background(), destination)
+	_ = "STUB: not implemented"
+	return *new(ro.Subscription)
 }
 
 // Implements ro.Observable[Out]
 func (ws *websocketSubject[In, Out]) SubscribeWithContext(ctx context.Context, destination ro.Observer[Out]) ro.Subscription {
-	_, output, err := ws.connect()
-	if err != nil {
-		destination.ErrorWithContext(context.TODO(), err)
-		sub := ro.NewSubscription(nil)
-		sub.Unsubscribe()
-		return sub
-	}
-
-	return output.SubscribeWithContext(ctx, destination)
+	_ = "STUB: not implemented"
+	return *new(ro.Subscription)
 }
 
 // Implements ro.Observer[In]
-func (ws *websocketSubject[In, Out]) Next(value In) {
-	ws.NextWithContext(context.Background(), value)
-}
+func (ws *websocketSubject[In, Out]) Next(value In) { _ = "STUB: not implemented"; return }
 
 // Implements ro.Observer[In]
 func (ws *websocketSubject[In, Out]) NextWithContext(ctx context.Context, value In) {
-	input, _, err := ws.connect()
-	if err != nil {
-		ws.ErrorWithContext(ctx, err)
-		return
-	}
-
-	data, err := ws.config.Serializer(value)
-	if err != nil {
-		ws.ErrorWithContext(ctx, err)
-		return
-	}
-
-	input.NextWithContext(ctx, data)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements ro.Observer[In]
-func (ws *websocketSubject[In, Out]) Error(err error) {
-	ws.ErrorWithContext(context.Background(), err)
-}
+func (ws *websocketSubject[In, Out]) Error(err error) { _ = "STUB: not implemented"; return }
 
 // Implements ro.Observer[In]
 func (ws *websocketSubject[In, Out]) ErrorWithContext(ctx context.Context, err error) {
-	ws.output.ErrorWithContext(ctx, err)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements ro.Observer[In]
-func (ws *websocketSubject[In, Out]) Complete() {
-	ws.CompleteWithContext(context.Background())
-}
+func (ws *websocketSubject[In, Out]) Complete() { _ = "STUB: not implemented"; return }
 
 // Implements ro.Observer[In]
 func (ws *websocketSubject[In, Out]) CompleteWithContext(ctx context.Context) {
-	ws.output.CompleteWithContext(ctx)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements ro.Observer[In]
-func (ws *websocketSubject[In, Out]) IsClosed() bool {
-	return ws.output.IsClosed()
-}
+func (ws *websocketSubject[In, Out]) IsClosed() bool { _ = "STUB: not implemented"; return false }
 
 // Implements ro.Observer[In]
-func (ws *websocketSubject[In, Out]) HasThrown() bool {
-	return ws.output.HasThrown()
-}
+func (ws *websocketSubject[In, Out]) HasThrown() bool { _ = "STUB: not implemented"; return false }
 
 // Implements ro.Observer[In]
-func (ws *websocketSubject[In, Out]) IsCompleted() bool {
-	return ws.output.IsCompleted()
-}
+func (ws *websocketSubject[In, Out]) IsCompleted() bool { _ = "STUB: not implemented"; return false }
 
 // Implements ro.Subject[Out]
-func (ws *websocketSubject[In, Out]) HasObserver() bool {
-	return ws.output.HasObserver()
-}
+func (ws *websocketSubject[In, Out]) HasObserver() bool { _ = "STUB: not implemented"; return false }
 
 // Implements ro.Subject[Out]
-func (ws *websocketSubject[In, Out]) CountObservers() int {
-	return ws.output.CountObservers()
-}
+func (ws *websocketSubject[In, Out]) CountObservers() int { _ = "STUB: not implemented"; return 0 }
 
 // Implements ro.Subject[Out]
 func (ws *websocketSubject[In, Out]) AsObservable() ro.Observable[Out] {
-	return ws
+	_ = "STUB: not implemented"
+
+	// Implements ro.Subject[In]
+	return nil
 }
 
-// Implements ro.Subject[In]
 func (ws *websocketSubject[In, Out]) AsObserver() ro.Observer[In] {
-	return ws
+	_ = "STUB: not implemented"
+
+	// Connect establishes the WebSocket connection
+	return nil
 }
 
-// Connect establishes the WebSocket connection
 func (ws *websocketSubject[In, Out]) connect() (ro.Observer[[]byte], ro.Subject[Out], error) {
-	ws.mu.Lock()
-	defer ws.mu.Unlock()
-
-	if ws.conn != nil && ws.input != nil && ws.output != nil {
-		return ws.input, ws.output, nil // Already connected
-	}
-
-	// Set up headers
-	headers := http.Header{}
-	for key, value := range ws.config.Headers {
-		headers.Set(key, value)
-	}
-
-	// Dial the WebSocket connection
-	conn, _, err := ws.config.Dialer.Dial(ws.config.URL, headers)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	output := ws.config.OutputConnector()
-	input := ro.NewObserverWithContext(
-		func(ctx context.Context, value []byte) {
-			// conn.SetWriteDeadline(time.Now().Add(?))
-			err := ws.conn.WriteMessage(websocket.TextMessage, value)
-			if err != nil {
-				output.ErrorWithContext(ctx, err)
-			}
-		},
-		func(ctx context.Context, err error) {
-			output.ErrorWithContext(ctx, err)
-			ws.conn.Close()
-			ws.mu.Lock()
-			ws.conn = nil
-			ws.input = nil
-			ws.output = nil
-			ws.mu.Unlock()
-		},
-		func(ctx context.Context) {
-			output.CompleteWithContext(ctx)
-			ws.conn.Close()
-
-			ws.mu.Lock()
-			ws.conn = nil
-			ws.input = nil
-			ws.output = nil
-			ws.mu.Unlock()
-		},
-	)
-
-	ws.conn = conn
-	ws.input = input
-	ws.output = output
-
-	// Start reading messages
-	go ws.readMessages(ws.conn, ws.output)
-
-	return ws.input, ws.output, nil
+	_ = "STUB: not implemented"
+	return nil, nil, nil
 }
+
+// Already connected
+
+// Set up headers
+
+// Dial the WebSocket connection
+
+// conn.SetWriteDeadline(time.Now().Add(?))
+
+// Start reading messages
 
 func (ws *websocketSubject[In, Out]) readMessages(conn *websocket.Conn, output ro.Subject[Out]) {
-	defer output.CompleteWithContext(context.TODO())
-
-	conn.SetPongHandler(func(string) error {
-		return nil
-	})
-
-	for {
-		messageType, message, err := ws.conn.ReadMessage()
-		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				output.ErrorWithContext(context.TODO(), err)
-			}
-			return
-		}
-
-		if messageType == websocket.CloseMessage {
-			break
-		}
-
-		if messageType != websocket.TextMessage {
-			continue
-		}
-
-		// Deserialize and emit the message
-		value, err := ws.config.Deserializer(message)
-		if err != nil {
-			output.ErrorWithContext(context.TODO(), err)
-			continue
-		}
-
-		output.NextWithContext(context.TODO(), value)
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// Deserialize and emit the message

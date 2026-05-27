@@ -15,40 +15,25 @@
 package rootel
 
 import (
-	"time"
-
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/log"
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/trace"
 )
 
-func concatAttributes[T any](kv ...[]T) []T {
-	length := 0
-	for _, v := range kv {
-		length += len(v)
-	}
-
-	output := make([]T, length)
-	for _, v := range kv {
-		output = append(output, v...)
-	}
-	return output
-}
+func concatAttributes[T any](kv ...[]T) []T { _ = "STUB: not implemented"; return nil }
 
 func traceWithAttributes(kv ...[]attribute.KeyValue) trace.SpanStartEventOption {
-	return trace.WithAttributes(concatAttributes(kv...)...)
+	_ = "STUB: not implemented"
+	return *new(trace.SpanStartEventOption)
 }
 
 func metricWithAttributes(kv ...[]attribute.KeyValue) metric.MeasurementOption {
-	return metric.WithAttributes(concatAttributes(kv...)...)
+	_ = "STUB: not implemented"
+	return *new(metric.MeasurementOption)
 }
 
 func newRecord(msg string, severity log.Severity, kv ...log.KeyValue) log.Record {
-	var r log.Record
-	r.SetEventName(msg)
-	r.SetObservedTimestamp(time.Now())
-	r.SetSeverity(severity)
-	r.AddAttributes(kv...)
-	return r
+	_ = "STUB: not implemented"
+	return *new(log.Record)
 }

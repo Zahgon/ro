@@ -15,30 +15,14 @@
 package robytes
 
 import (
-	"bytes"
-
 	"github.com/samber/ro"
 )
 
-func ellipsis(str []byte, length int) []byte {
-	str = bytes.TrimSpace(str)
-
-	if len(str) > length {
-		if len(str) < 3 || length < 3 {
-			return []byte("...")
-		}
-		return append(bytes.TrimSpace(str[0:length-3]), '.', '.', '.')
-	}
-
-	return str
-}
+func ellipsis(str []byte, length int) []byte { _ = "STUB: not implemented"; return nil }
 
 // Ellipsis truncates the string to the specified length and appends "..." if the string is longer than the specified length.
 // Play: https://go.dev/play/p/5HBKJcWTNrG
 func Ellipsis[T ~[]byte](length int) func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(ellipsis(value, length))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

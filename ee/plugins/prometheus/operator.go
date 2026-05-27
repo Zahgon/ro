@@ -15,12 +15,8 @@
 package roprometheus
 
 import (
-	"context"
-	"strconv"
-
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/samber/ro"
-	"github.com/samber/ro/internal/xtime"
 )
 
 // IncCounterOnNext is a pipe operator that increments a counter
@@ -29,27 +25,8 @@ import (
 // It adds a short lock for each Next() notification: 30ns for the
 // prometheus/client_golang locks.
 func IncCounterOnNext[T any](counter prometheus.Counter) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		if !isPrometheusEnabled() {
-			return source
-		}
-
-		return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						counter.Inc()
-						destination.NextWithContext(ctx, value)
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IncCounterOnError is a pipe operator that increments a counter
@@ -58,27 +35,8 @@ func IncCounterOnNext[T any](counter prometheus.Counter) func(ro.Observable[T]) 
 // It adds a short lock for each Error() notification: 30ns for the
 // prometheus/client_golang locks.
 func IncCounterOnError[T any](counter prometheus.Counter) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		if !isPrometheusEnabled() {
-			return source
-		}
-
-		return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					destination.NextWithContext,
-					func(ctx context.Context, err error) {
-						counter.Inc()
-						destination.ErrorWithContext(ctx, err)
-					},
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IncCounterOnComplete is a pipe operator that increments a counter
@@ -87,27 +45,8 @@ func IncCounterOnError[T any](counter prometheus.Counter) func(ro.Observable[T])
 // It adds a short lock for each Complete() notification: 30ns for the
 // prometheus/client_golang locks.
 func IncCounterOnComplete[T any](counter prometheus.Counter) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		if !isPrometheusEnabled() {
-			return source
-		}
-
-		return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					destination.NextWithContext,
-					destination.ErrorWithContext,
-					func(ctx context.Context) {
-						counter.Inc()
-						destination.CompleteWithContext(ctx)
-					},
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IncCounterOnSubscription is a pipe operator that increments a counter
@@ -116,18 +55,8 @@ func IncCounterOnComplete[T any](counter prometheus.Counter) func(ro.Observable[
 // It adds a short lock for each subscription: 30ns for the
 // prometheus/client_golang locks.
 func IncCounterOnSubscription[T any](counter prometheus.Counter) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		if !isPrometheusEnabled() {
-			return source
-		}
-
-		return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			counter.Inc()
-
-			sub := source.SubscribeWithContext(subscriberCtx, destination)
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ObserveNextLag is a pipe operator that tracks the time it takes for a notification
@@ -139,31 +68,11 @@ func IncCounterOnSubscription[T any](counter prometheus.Counter) func(ro.Observa
 //   - 2x 15ns for the time tracking
 //   - 30ns for the prometheus/client_golang locks
 func ObserveNextLag[T any](summaryOrHistogram prometheus.Observer) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		if !isPrometheusEnabled() {
-			return source
-		}
-
-		return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						start := xtime.NowNanoMonotonic()
-						destination.NextWithContext(ctx, value)
-						end := xtime.NowNanoMonotonic()
-
-						summaryOrHistogram.Observe(float64(end-start) / 1e9)
-					},
-					// @TODO: track error and completion processing time?
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// @TODO: track error and completion processing time?
 
 type checkpointCtx struct{}
 
@@ -173,71 +82,27 @@ type checkpointCtx struct{}
 //
 // Aggregating avoid the need to add a short lock for each notification.
 func observeBeforePipe[T any](counterOnNext prometheus.Counter, summaryOrHistogram prometheus.Observer) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						// Operator: Operator: IncCounterOnNext
-						counterOnNext.Inc()
-
-						/////////////////////////////
-
-						// Operator: observeOnNotification
-						start := xtime.NowNanoMonotonic()
-						ctx = context.WithValue(ctx, checkpointCtx{}, start)
-
-						/////////////////////////////
-
-						// Operator: ObserveNextLag
-						destination.NextWithContext(ctx, value)
-
-						end := xtime.NowNanoMonotonic()
-						summaryOrHistogram.Observe(float64(end-start) / 1e9)
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Operator: Operator: IncCounterOnNext
+
+/////////////////////////////
+
+// Operator: observeOnNotification
+
+/////////////////////////////
+
+// Operator: ObserveNextLag
 
 // observeOperatorProcessingTime is a pipe operator that observes the processing time of an operator.
 func observeOperatorProcessingTime[T any](summaryOrHistogram prometheus.ObserverVec, operatorName string, operatorPosition string, operatorIndex int) func(ro.Observable[T]) ro.Observable[T] {
-	prometheusObserver := summaryOrHistogram.With(prometheus.Labels{
-		labelNameOperator:         operatorName,
-		labelNameOperatorPosition: operatorPosition,
-		labelNameOperatorIndex:    strconv.Itoa(operatorIndex),
-	})
-
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						start, ok := ctx.Value(checkpointCtx{}).(int64)
-						end := xtime.NowNanoMonotonic()
-
-						if ok {
-							prometheusObserver.Observe(float64(end-start) / 1e9)
-						}
-
-						ctx = context.WithValue(ctx, checkpointCtx{}, end)
-						destination.NextWithContext(ctx, value)
-					},
-					// @TODO: track error and completion processing time?
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// @TODO: track error and completion processing time?
 
 // observeAfterPipe is the aggregation of the following operators:
 //   - IncCounterOnNext
@@ -245,25 +110,10 @@ func observeOperatorProcessingTime[T any](summaryOrHistogram prometheus.Observer
 //
 // Aggregating avoid the need to add a short lock for each notification.
 func observeAfterPipe[T any](counterOnNext prometheus.Counter, counterOnSubscription prometheus.Counter) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			// Operator: IncCounterOnSubscription
-			counterOnSubscription.Inc()
-
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						// Operator: IncCounterOnNext
-						counterOnNext.Inc()
-
-						destination.NextWithContext(ctx, value)
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Operator: IncCounterOnSubscription
+
+// Operator: IncCounterOnNext

@@ -22,14 +22,12 @@ import (
 )
 
 func sinkToDB(v map[string]map[string]string) {
+	_ = "STUB: not implemented"
 	// ...
+	return
 }
 
-func sinkToStdout(ts map[string]map[string]string) {
-	for k, v := range ts {
-		println(k, v["4. close"])
-	}
-}
+func sinkToStdout(ts map[string]map[string]string) { _ = "STUB: not implemented"; return }
 
 var source = ro.Connectable(
 	ro.Pipe6(

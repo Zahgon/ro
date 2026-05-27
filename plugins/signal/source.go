@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rosignal
 
 import (
-	"context"
 	"os"
-	"os/signal"
 
 	"github.com/samber/ro"
 )
@@ -28,20 +25,6 @@ const IOReaderBufferSize = 1024
 // Notify causes package signal to relay incoming signals to c.
 // If no signals are provided, all incoming signals will be relayed to c.
 func NewSignalCatcher(signals ...os.Signal) ro.Observable[os.Signal] {
-	return ro.NewUnsafeObservableWithContext(func(ctx context.Context, destination ro.Observer[os.Signal]) ro.Teardown {
-		ch := make(chan os.Signal, 1)
-		signal.Notify(ch, signals...)
-
-		go func() {
-			for sig := range ch {
-				destination.NextWithContext(ctx, sig)
-			}
-			destination.CompleteWithContext(ctx)
-		}()
-
-		return func() {
-			signal.Stop(ch)
-			close(ch)
-		}
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -12,63 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rosentry
 
 import (
-	"context"
-	"fmt"
-
 	"github.com/getsentry/sentry-go"
 	"github.com/samber/ro"
 )
 
 func Log[T any](logger *sentry.Hub, level sentry.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			event := sentry.NewEvent()
-			event.Level = level
-			event.Message = fmt.Sprintf("ro.Next: %v", value)
-			logger.CaptureEvent(event)
-		},
-		func(ctx context.Context, err error) {
-			event := sentry.NewEvent()
-			event.Level = level
-			event.Message = "ro.Error: " + err.Error()
-			event.SetException(err, 10)
-			logger.CaptureEvent(event)
-		},
-		func(ctx context.Context) {
-			event := sentry.NewEvent()
-			event.Level = level
-			event.Message = "ro.Complete"
-			logger.CaptureEvent(event)
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func LogWithNotification[T any](logger *sentry.Hub, level sentry.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			event := sentry.NewEvent()
-			event.Level = level
-			event.Message = "ro.Next"
-			event.Extra["value"] = value
-			logger.CaptureEvent(event)
-		},
-		func(ctx context.Context, err error) {
-			event := sentry.NewEvent()
-			event.Level = level
-			event.Message = "ro.Error"
-			event.Extra["error"] = err
-			event.SetException(err, 10)
-			logger.CaptureEvent(event)
-		},
-		func(ctx context.Context) {
-			event := sentry.NewEvent()
-			event.Level = level
-			event.Message = "ro.Complete"
-			logger.CaptureEvent(event)
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

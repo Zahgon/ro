@@ -16,20 +16,13 @@ package rostrings
 
 import (
 	"github.com/samber/ro"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
-func capitalize(str string) string {
-	return cases.Title(language.English).String(str)
-}
+func capitalize(str string) string { _ = "STUB: not implemented"; return "" }
 
 // Capitalize capitalizes the first letter of the string.
 // Play: https://go.dev/play/p/7hK8m9jL3nS
 func Capitalize[T ~string]() func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(capitalize(string(value)))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

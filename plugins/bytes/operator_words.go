@@ -15,37 +15,16 @@
 package robytes
 
 import (
-	"bytes"
-	"unicode"
-
 	"github.com/samber/ro"
 )
 
-func words(str []byte) [][]byte {
-	str = splitWordReg.ReplaceAll(str, []byte(`$1$3$5$7 $2$4$6$8$9`))
-	// example: Int8Value => Int 8Value => Int 8 Value
-	str = splitNumberLetterReg.ReplaceAll(str, []byte("$1 $2"))
-	var result bytes.Buffer
-	for _, r := range str {
-		if unicode.IsLetter(rune(r)) || unicode.IsDigit(rune(r)) {
-			result.WriteByte(r)
-		} else {
-			result.WriteByte(' ')
-		}
-	}
-	return bytes.Fields(result.Bytes())
-}
+func words(str []byte) [][]byte { _ = "STUB: not implemented"; return nil }
+
+// example: Int8Value => Int 8Value => Int 8 Value
 
 // Words splits the string into words.
 // Play: https://go.dev/play/p/N6fiwqBry5e
 func Words[T ~[]byte]() func(destination ro.Observable[T]) ro.Observable[[]T] {
-	return ro.Map(
-		func(value T) []T {
-			output := make([]T, 0)
-			for _, word := range words(value) {
-				output = append(output, T(word))
-			}
-			return output
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -17,7 +17,6 @@
 package xatomic
 
 import (
-	"sync/atomic"
 	"unsafe"
 )
 
@@ -30,33 +29,34 @@ type Pointer[T any] struct {
 
 // NewPointer returns a new Pointer[T] initialized with the given value.
 func NewPointer[T any](v *T) Pointer[T] {
-	return Pointer[T]{
-		// bearer:disable go_gosec_unsafe_unsafe
-		p: unsafe.Pointer(v),
-	}
+	_ = "STUB: not implemented"
+
+	// bearer:disable go_gosec_unsafe_unsafe
+	return nil
 }
 
 // Load returns the value stored in the pointer atomically.
-func (x *Pointer[T]) Load() *T {
-	return (*T)(atomic.LoadPointer(&x.p))
-}
+func (x *Pointer[T]) Load() *T { _ = "STUB: not implemented"; return nil }
 
 // Store stores the value in the pointer atomically.
 func (x *Pointer[T]) Store(val *T) {
+	_ = "STUB: not implemented"
 	// bearer:disable go_gosec_unsafe_unsafe
-	atomic.StorePointer(&x.p, unsafe.Pointer(val))
+	return
 }
 
 // Swap swaps the value in the pointer with the new value and returns the old value atomically.
 func (x *Pointer[T]) Swap(val *T) (old *T) {
+	_ = "STUB: not implemented"
 	// bearer:disable go_gosec_unsafe_unsafe
-	return (*T)(atomic.SwapPointer(&x.p, unsafe.Pointer(val)))
+	return nil
 }
 
 // CompareAndSwap performs a compare-and-swap operation on the pointer atomically.
 // It stores new in the pointer if the current value is equal to old.
 // It returns true if the swap was performed, false otherwise.
 func (x *Pointer[T]) CompareAndSwap(old, nEw *T) (swapped bool) {
+	_ = "STUB: not implemented"
 	// bearer:disable go_gosec_unsafe_unsafe
-	return atomic.CompareAndSwapPointer(&x.p, unsafe.Pointer(old), unsafe.Pointer(nEw))
+	return false
 }

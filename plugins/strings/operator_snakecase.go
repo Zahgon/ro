@@ -15,25 +15,14 @@
 package rostrings
 
 import (
-	"strings"
-
 	"github.com/samber/ro"
 )
 
-func snakeCase(str string) string {
-	items := words(str)
-	for i := range items {
-		items[i] = strings.ToLower(items[i])
-	}
-	return strings.Join(items, "_")
-}
+func snakeCase(str string) string { _ = "STUB: not implemented"; return "" }
 
 // SnakeCase converts the string to snake case.
 // Play: https://go.dev/play/p/hlGVKI-dR4y
 func SnakeCase[T ~string]() func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(snakeCase(string(value)))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

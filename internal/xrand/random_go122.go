@@ -16,19 +16,11 @@
 
 package xrand
 
-import "math/rand/v2"
-
 // IntN is a wrapper around rand.IntN that is only available in Go 1.22 and later.
-func IntN(n int) int {
-	return rand.IntN(n)
-}
+func IntN(n int) int { _ = "STUB: not implemented"; return 0 }
 
 // Int64 is a wrapper around rand.Int63 that is only available in Go 1.22 and later.
-func Int64() int64 {
-	return rand.Int64()
-}
+func Int64() int64 { _ = "STUB: not implemented"; return 0 }
 
 // Float64 is a wrapper around rand.Float64 that is only available in Go 1.22 and later.
-func Float64() float64 {
-	return rand.Float64()
-}
+func Float64() float64 { _ = "STUB: not implemented"; return 0 }

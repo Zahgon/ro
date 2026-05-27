@@ -12,21 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rootel
 
 import (
-	"context"
-
 	"github.com/samber/ro"
-	rolicense "github.com/samber/ro/ee/pkg/license"
 )
 
 var bypassLicenseCheck = false
 
-func isOtelEnabled() bool {
-	return bypassLicenseCheck || rolicense.IsEnterpriseEnabled()
-}
+func isOtelEnabled() bool { _ = "STUB: not implemented"; return false }
 
 func checkLicenseAndPipe[First any, Last any](
 	collector *otelCollector,
@@ -34,16 +28,6 @@ func checkLicenseAndPipe[First any, Last any](
 	stdPipe func(ro.Observable[First]) ro.Observable[Last],
 	instrumentedPipe func(ro.Observable[First]) ro.Observable[Last],
 ) ro.Observable[Last] {
-	return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[Last]) ro.Teardown {
-		var p func(ro.Observable[First]) ro.Observable[Last]
-
-		if isOtelEnabled() {
-			p = wrapPipeWithObservability(collector, instrumentedPipe)
-		} else {
-			p = stdPipe
-		}
-
-		sub := p(source).SubscribeWithContext(subscriberCtx, destination)
-		return sub.Unsubscribe
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -15,9 +15,7 @@
 package xsync
 
 import (
-	"runtime"
 	"sync"
-	"sync/atomic"
 )
 
 // Mutex is a mutex interface.
@@ -34,11 +32,7 @@ type Mutex interface {
 var _ Mutex = (*MutexWithLock)(nil)
 
 // NewMutexWithLock creates a new mutex with a standard mutex.
-func NewMutexWithLock() *MutexWithLock {
-	return &MutexWithLock{
-		mu: sync.Mutex{},
-	}
-}
+func NewMutexWithLock() *MutexWithLock { _ = "STUB: not implemented"; return nil }
 
 // MutexWithLock is a mutex with a standard mutex.
 type MutexWithLock struct {
@@ -46,33 +40,29 @@ type MutexWithLock struct {
 }
 
 // TryLock tries to lock the mutex.
-func (m *MutexWithLock) TryLock() bool {
-	return m.mu.TryLock()
-}
+func (m *MutexWithLock) TryLock() bool { _ = "STUB: not implemented"; return false }
 
 // Lock locks the mutex.
 func (m *MutexWithLock) Lock() {
-	m.mu.Lock()
+	_ = "STUB: not implemented"
+
+	// Unlock unlocks the mutex.
+	return
 }
 
-// Unlock unlocks the mutex.
 func (m *MutexWithLock) Unlock() {
-	m.mu.Unlock()
-}
+	_ = "STUB: not implemented"
 
-/************************
- *    Fast mutex        *
- ************************/
+	/************************
+	 *    Fast mutex        *
+	 ************************/return
+}
 
 var _ Mutex = (*MutexWithSpinlock)(nil)
 
 // NewMutexWithSpinlock creates a new mutex with a spinlock.
 // It is faster than the standard mutex, but it is CPU-intensive.
-func NewMutexWithSpinlock() *MutexWithSpinlock {
-	return &MutexWithSpinlock{
-		lock: 0,
-	}
-}
+func NewMutexWithSpinlock() *MutexWithSpinlock { _ = "STUB: not implemented"; return nil }
 
 // MutexWithSpinlock is a mutex with a spinlock.
 type MutexWithSpinlock struct {
@@ -80,21 +70,13 @@ type MutexWithSpinlock struct {
 }
 
 // TryLock tries to lock the mutex.
-func (m *MutexWithSpinlock) TryLock() bool {
-	return !atomic.CompareAndSwapInt32(&m.lock, 0, 1)
-}
+func (m *MutexWithSpinlock) TryLock() bool { _ = "STUB: not implemented"; return false }
 
 // Lock locks the mutex.
-func (m *MutexWithSpinlock) Lock() {
-	for !atomic.CompareAndSwapInt32(&m.lock, 0, 1) {
-		runtime.Gosched()
-	}
-}
+func (m *MutexWithSpinlock) Lock() { _ = "STUB: not implemented"; return }
 
 // Unlock unlocks the mutex.
-func (m *MutexWithSpinlock) Unlock() {
-	atomic.StoreInt32(&m.lock, 0)
-}
+func (m *MutexWithSpinlock) Unlock() { _ = "STUB: not implemented"; return }
 
 /************************
  *      Fake mutex      *
@@ -103,22 +85,24 @@ func (m *MutexWithSpinlock) Unlock() {
 var _ Mutex = (*MutexWithoutLock)(nil)
 
 // NewMutexWithoutLock creates a new mutex without a lock.
-func NewMutexWithoutLock() *MutexWithoutLock {
-	return &MutexWithoutLock{}
-}
+func NewMutexWithoutLock() *MutexWithoutLock { _ = "STUB: not implemented"; return nil }
 
 // MutexWithoutLock is a mutex without a lock.
 type MutexWithoutLock struct{}
 
 // TryLock always returns true.
 func (m *MutexWithoutLock) TryLock() bool {
-	return true
+	_ = "STUB: not implemented"
+
+	// Lock does nothing.
+	return false
 }
 
-// Lock does nothing.
 func (m *MutexWithoutLock) Lock() {
+	_ = "STUB: not implemented"
+
+	// Unlock does nothing.
+	return
 }
 
-// Unlock does nothing.
-func (m *MutexWithoutLock) Unlock() {
-}
+func (m *MutexWithoutLock) Unlock() { _ = "STUB: not implemented"; return }

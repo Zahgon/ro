@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package roozzovalidation
 
 import (
-	"context"
 	"errors"
 
 	ozzo "github.com/go-ozzo/ozzo-validation/v4"
@@ -30,127 +28,61 @@ var (
 )
 
 func Validate[T any](rules ...ozzo.Rule) func(ro.Observable[T]) ro.Observable[Result[T]] {
-	return ro.Map(func(v T) Result[T] {
-		err := ozzo.Validate(v, rules...)
-		if err != nil {
-			return Err[T](err)
-		}
-		return Ok(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateStruct[T any]() func(ro.Observable[T]) ro.Observable[Result[T]] {
-	var t T
-	if _, ok := any(t).(ozzo.Validatable); !ok {
-		panic(ErrValidatable)
-	}
-
-	return ro.Map(func(v T) Result[T] {
-		err := any(v).(ozzo.Validatable).Validate()
-		if err != nil {
-			return Err[T](err)
-		}
-		return Ok(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateWithContext[T any](rules ...ozzo.Rule) func(ro.Observable[T]) ro.Observable[Result[T]] {
-	return ro.MapWithContext(func(ctx context.Context, v T) (context.Context, Result[T]) {
-		err := ozzo.ValidateWithContext(ctx, v, rules...)
-		if err != nil {
-			return ctx, Err[T](err)
-		}
-		return ctx, Ok(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateStructWithContext[T any]() func(ro.Observable[T]) ro.Observable[Result[T]] {
-	var t T
-	if _, ok := any(t).(ozzo.ValidatableWithContext); !ok {
-		panic(ErrValidatableWithContext)
-	}
-
-	return ro.MapWithContext(func(ctx context.Context, v T) (context.Context, Result[T]) {
-		err := any(v).(ozzo.ValidatableWithContext).ValidateWithContext(ctx)
-		if err != nil {
-			return ctx, Err[T](err)
-		}
-		return ctx, Ok(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateOrError[T any](rules ...ozzo.Rule) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.MapErr(func(v T) (T, error) {
-		err := ozzo.Validate(v, rules...)
-		return v, err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateStructOrError[T any]() func(ro.Observable[T]) ro.Observable[T] {
-	var t T
-	if _, ok := any(t).(ozzo.Validatable); !ok {
-		panic(ErrValidatable)
-	}
-
-	return ro.MapErr(func(v T) (T, error) {
-		err := any(v).(ozzo.Validatable).Validate()
-		return v, err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateOrErrorWithContext[T any](rules ...ozzo.Rule) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.MapErrWithContext(func(ctx context.Context, v T) (T, context.Context, error) {
-		err := ozzo.ValidateWithContext(ctx, v, rules...)
-		return v, ctx, err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateStructOrErrorWithContext[T any]() func(ro.Observable[T]) ro.Observable[T] {
-	var t T
-	if _, ok := any(t).(ozzo.ValidatableWithContext); !ok {
-		panic(ErrValidatableWithContext)
-	}
-
-	return ro.MapErrWithContext(func(ctx context.Context, v T) (T, context.Context, error) {
-		err := any(v).(ozzo.ValidatableWithContext).ValidateWithContext(ctx)
-		return v, ctx, err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateOrSkip[T any](rules ...ozzo.Rule) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.Filter(func(v T) bool {
-		err := ozzo.Validate(v, rules...)
-		return err == nil
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateStructOrSkip[T any]() func(ro.Observable[T]) ro.Observable[T] {
-	var t T
-	if _, ok := any(t).(ozzo.Validatable); !ok {
-		panic(ErrValidatable)
-	}
-
-	return ro.Filter(func(v T) bool {
-		err := any(v).(ozzo.Validatable).Validate()
-		return err == nil
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateOrSkipWithContext[T any](rules ...ozzo.Rule) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.FilterWithContext(func(ctx context.Context, v T) (context.Context, bool) {
-		err := ozzo.ValidateWithContext(ctx, v, rules...)
-		return ctx, err == nil
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ValidateStructOrSkipWithContext[T any]() func(ro.Observable[T]) ro.Observable[T] {
-	var t T
-	if _, ok := any(t).(ozzo.ValidatableWithContext); !ok {
-		panic(ErrValidatableWithContext)
-	}
-
-	return ro.FilterWithContext(func(ctx context.Context, v T) (context.Context, bool) {
-		err := any(v).(ozzo.ValidatableWithContext).ValidateWithContext(ctx)
-		return ctx, err == nil
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

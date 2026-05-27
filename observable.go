@@ -17,8 +17,6 @@ package ro
 import (
 	"context"
 	"sync"
-
-	"github.com/samber/lo"
 )
 
 // Backpressure is a type that represents the backpressure strategy to use.
@@ -94,7 +92,8 @@ var _ Observable[int] = (*observableImpl[int])(nil)
 //
 // This method is not safe for concurrent use.
 func NewObservable[T any](subscribe func(destination Observer[T]) Teardown) Observable[T] {
-	return NewSafeObservable(subscribe)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewSafeObservable creates a new Observable. The subscribe function is called when
@@ -112,12 +111,8 @@ func NewObservable[T any](subscribe func(destination Observer[T]) Teardown) Obse
 //
 // This method is not safe for concurrent use.
 func NewSafeObservable[T any](subscribe func(destination Observer[T]) Teardown) Observable[T] {
-	return NewObservableWithConcurrencyMode(
-		func(ctx context.Context, destination Observer[T]) Teardown {
-			return subscribe(destination)
-		},
-		ConcurrencyModeSafe,
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewUnsafeObservable creates a new Observable. The subscribe function is called when
@@ -135,12 +130,8 @@ func NewSafeObservable[T any](subscribe func(destination Observer[T]) Teardown) 
 //
 // This method is not safe for concurrent use.
 func NewUnsafeObservable[T any](subscribe func(destination Observer[T]) Teardown) Observable[T] {
-	return NewObservableWithConcurrencyMode(
-		func(ctx context.Context, destination Observer[T]) Teardown {
-			return subscribe(destination)
-		},
-		ConcurrencyModeUnsafe,
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewEventuallySafeObservable creates a new Observable. The subscribe function is called when
@@ -158,12 +149,8 @@ func NewUnsafeObservable[T any](subscribe func(destination Observer[T]) Teardown
 //
 // This method is safe for concurrent use, but concurrent messages are dropped.
 func NewEventuallySafeObservable[T any](subscribe func(destination Observer[T]) Teardown) Observable[T] {
-	return NewObservableWithConcurrencyMode(
-		func(ctx context.Context, destination Observer[T]) Teardown {
-			return subscribe(destination)
-		},
-		ConcurrencyModeEventuallySafe,
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewObservableWithContext creates a new Observable. The subscribe function is called when
@@ -181,7 +168,8 @@ func NewEventuallySafeObservable[T any](subscribe func(destination Observer[T]) 
 //
 // This method is not safe for concurrent use.
 func NewObservableWithContext[T any](subscribe func(ctx context.Context, destination Observer[T]) Teardown) Observable[T] {
-	return NewSafeObservableWithContext(subscribe)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewSafeObservableWithContext creates a new Observable. The subscribe function is called when
@@ -199,7 +187,8 @@ func NewObservableWithContext[T any](subscribe func(ctx context.Context, destina
 //
 // This method is not safe for concurrent use.
 func NewSafeObservableWithContext[T any](subscribe func(ctx context.Context, destination Observer[T]) Teardown) Observable[T] {
-	return NewObservableWithConcurrencyMode(subscribe, ConcurrencyModeSafe)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewUnsafeObservableWithContext creates a new Observable. The subscribe function is called when
@@ -217,7 +206,8 @@ func NewSafeObservableWithContext[T any](subscribe func(ctx context.Context, des
 //
 // This method is not safe for concurrent use.
 func NewUnsafeObservableWithContext[T any](subscribe func(ctx context.Context, destination Observer[T]) Teardown) Observable[T] {
-	return NewObservableWithConcurrencyMode(subscribe, ConcurrencyModeUnsafe)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewEventuallySafeObservableWithContext creates a new Observable. The subscribe function is called when
@@ -235,7 +225,8 @@ func NewUnsafeObservableWithContext[T any](subscribe func(ctx context.Context, d
 //
 // This method is safe for concurrent use, but concurrent messages are dropped.
 func NewEventuallySafeObservableWithContext[T any](subscribe func(ctx context.Context, destination Observer[T]) Teardown) Observable[T] {
-	return NewObservableWithConcurrencyMode(subscribe, ConcurrencyModeEventuallySafe)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewObservableWithConcurrencyMode creates a new Observable with the given concurrency mode.
@@ -253,10 +244,8 @@ func NewEventuallySafeObservableWithContext[T any](subscribe func(ctx context.Co
 //
 // It is rarely used as a public API.
 func NewObservableWithConcurrencyMode[T any](subscribe func(ctx context.Context, destination Observer[T]) Teardown, mode ConcurrencyMode) Observable[T] {
-	return &observableImpl[T]{
-		mode:      mode,
-		subscribe: subscribe,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type observableImpl[T any] struct {
@@ -281,7 +270,8 @@ type observableImpl[T any] struct {
 // asynchronously. The Observer is responsible for handling concurrency and
 // synchronization.
 func (s *observableImpl[T]) Subscribe(destination Observer[T]) Subscription {
-	return s.SubscribeWithContext(context.Background(), destination)
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
 
 // SubscribeWithContext subscribes an Observer to the Observable. The Observer will begin
@@ -301,33 +291,18 @@ func (s *observableImpl[T]) Subscribe(destination Observer[T]) Subscription {
 // asynchronously. The Observer is responsible for handling concurrency and
 // synchronization.
 func (s *observableImpl[T]) SubscribeWithContext(ctx context.Context, destination Observer[T]) Subscription {
-	subscription := NewSubscriberWithConcurrencyMode(destination, s.mode)
-
-	lo.TryCatchWithErrorValue(
-		func() error {
-			// Warning: here, we are catching panic in subscription.Add.
-			// I'm not sure if it's a good idea.
-			subscription.Add(s.subscribe(ctx, subscription))
-			return nil
-		},
-		func(e any) {
-			err := recoverValueToError(e)
-			subscription.ErrorWithContext(ctx, newObservableError(err))
-			subscription.Unsubscribe()
-		},
-	)
-
-	return subscription
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
+
+// Warning: here, we are catching panic in subscription.Add.
+// I'm not sure if it's a good idea.
 
 // Collect collects all values emitted by the source Observable and returns them
 // as a slice. It waits for the source Observable to complete before returning.
 // If the source Observable emits an error, the error is returned along with the
 // values collected so far.
-func Collect[T any](obs Observable[T]) ([]T, error) {
-	v, _, err := CollectWithContext(context.Background(), obs)
-	return v, err
-}
+func Collect[T any](obs Observable[T]) ([]T, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // CollectWithContext collects all values emitted by the source Observable and returns them
 // as a slice. It waits for the source Observable to complete before returning.
@@ -335,31 +310,11 @@ func Collect[T any](obs Observable[T]) ([]T, error) {
 // values collected so far.
 // @TODO: return more values, such as (isCanceled bool) or (duration time.Duration) ?
 func CollectWithContext[T any](ctx context.Context, obs Observable[T]) ([]T, context.Context, error) {
-	values := []T{}
-
-	var lastCtx context.Context
-	var err error
-
-	sub := obs.SubscribeWithContext(
-		ctx,
-		NewObserverWithContext(
-			func(ctx context.Context, value T) {
-				values = append(values, value)
-			},
-			func(ctx context.Context, thrown error) {
-				err = thrown
-				lastCtx = ctx
-			},
-			func(ctx context.Context) {
-				lastCtx = ctx
-			},
-		),
-	)
-
-	sub.Wait() // Note: using .Wait() is not recommended.
-
-	return values, lastCtx, err
+	_ = "STUB: not implemented"
+	return nil, *new(context.Context), nil
 }
+
+// Note: using .Wait() is not recommended.
 
 // ConnectableObservable is an Observable that can be connected and disconnected.
 // When connected, it will emit values to its observers.
@@ -393,9 +348,7 @@ type ConnectableConfig[T any] struct {
 	ResetOnDisconnect bool
 }
 
-func defaultConnector[T any]() Subject[T] {
-	return NewPublishSubject[T]()
-}
+func defaultConnector[T any]() Subject[T] { _ = "STUB: not implemented"; return nil }
 
 // NewConnectableObservable creates a new ConnectableObservable. The subscribe function is called when
 // the ConnectableObservable is subscribed to. The subscribe function is given an Observer,
@@ -410,13 +363,8 @@ func defaultConnector[T any]() Subject[T] {
 // If you want to use a different connector or change the reset behavior, use
 // NewConnectableObservableWithConfig.
 func NewConnectableObservable[T any](subscribe func(destination Observer[T]) Teardown) ConnectableObservable[T] {
-	return newConnectableObservableImpl(
-		NewObservable(subscribe),
-		ConnectableConfig[T]{
-			Connector:         defaultConnector[T],
-			ResetOnDisconnect: true,
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewConnectableObservableWithContext creates a new ConnectableObservable. The subscribe function is called when
@@ -432,13 +380,8 @@ func NewConnectableObservable[T any](subscribe func(destination Observer[T]) Tea
 // If you want to use a different connector or change the reset behavior, use
 // NewConnectableObservableWithConfig.
 func NewConnectableObservableWithContext[T any](subscribe func(ctx context.Context, destination Observer[T]) Teardown) ConnectableObservable[T] {
-	return newConnectableObservableImpl(
-		NewObservableWithContext(subscribe),
-		ConnectableConfig[T]{
-			Connector:         defaultConnector[T],
-			ResetOnDisconnect: true,
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewConnectableObservableWithConfig creates a new ConnectableObservable. The subscribe function is called when
@@ -450,10 +393,8 @@ func NewConnectableObservableWithContext[T any](subscribe func(ctx context.Conte
 // the source when disconnected if ResetOnDisconnect is true. This means that when the
 // ConnectableObservable is disconnected, it will create a new source when reconnected.
 func NewConnectableObservableWithConfig[T any](subscribe func(destination Observer[T]) Teardown, config ConnectableConfig[T]) ConnectableObservable[T] {
-	return newConnectableObservableImpl(
-		NewObservable(subscribe),
-		config,
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewConnectableObservableWithConfigAndContext creates a new ConnectableObservable. The subscribe function is called when
@@ -465,10 +406,8 @@ func NewConnectableObservableWithConfig[T any](subscribe func(destination Observ
 // the source when disconnected if ResetOnDisconnect is true. This means that when the
 // ConnectableObservable is disconnected, it will create a new source when reconnected.
 func NewConnectableObservableWithConfigAndContext[T any](subscribe func(ctx context.Context, destination Observer[T]) Teardown, config ConnectableConfig[T]) ConnectableObservable[T] {
-	return newConnectableObservableImpl(
-		NewObservableWithContext(subscribe),
-		config,
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Connectable creates a new ConnectableObservable from an Observable. The ConnectableObservable
@@ -478,13 +417,8 @@ func NewConnectableObservableWithConfigAndContext[T any](subscribe func(ctx cont
 //
 // If you want to use a different connector or change the reset behavior, use ConnectableWithConfig.
 func Connectable[T any](source Observable[T]) ConnectableObservable[T] {
-	return newConnectableObservableImpl(
-		source,
-		ConnectableConfig[T]{
-			Connector:         defaultConnector[T],
-			ResetOnDisconnect: true,
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ConnectableWithConfig creates a new ConnectableObservable from an Observable. The ConnectableObservable
@@ -492,23 +426,13 @@ func Connectable[T any](source Observable[T]) ConnectableObservable[T] {
 // if ResetOnDisconnect is true. This means that when the ConnectableObservable is disconnected,
 // it will create a new source when reconnected.
 func ConnectableWithConfig[T any](source Observable[T], config ConnectableConfig[T]) ConnectableObservable[T] {
-	return newConnectableObservableImpl(
-		source,
-		config,
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func newConnectableObservableImpl[T any](source Observable[T], config ConnectableConfig[T]) ConnectableObservable[T] {
-	if config.Connector == nil {
-		panic(ErrConnectableObservableMissingConnectorFactory)
-	}
-
-	return &connectableObservableImpl[T]{
-		config:       config,
-		source:       source,
-		subject:      config.Connector(),
-		subscription: nil,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type connectableObservableImpl[T any] struct {
@@ -529,7 +453,8 @@ type connectableObservableImpl[T any] struct {
 //
 // The Subscription might be already disposed when the Connect method returns.
 func (s *connectableObservableImpl[T]) Connect() Subscription {
-	return s.ConnectWithContext(context.Background())
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
 
 // ConnectWithContext connects the ConnectableObservable. When connected, the ConnectableObservable
@@ -542,26 +467,16 @@ func (s *connectableObservableImpl[T]) Connect() Subscription {
 //
 // The Subscription might be already disposed when the Connect method returns.
 func (s *connectableObservableImpl[T]) ConnectWithContext(ctx context.Context) Subscription {
-	s.mu.Lock()
-	if s.subscription == nil || s.subscription.IsClosed() {
-		s.subscription = s.source.SubscribeWithContext(ctx, s.subject)
-		s.mu.Unlock()
-		s.subscription.Add(func() {
-			if s.config.ResetOnDisconnect {
-				s.subject = s.config.Connector()
-			}
-		})
-	} else {
-		s.mu.Unlock()
-	}
-
-	return s.subscription
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
 
 func (s *connectableObservableImpl[T]) Subscribe(observer Observer[T]) Subscription {
-	return s.SubscribeWithContext(context.Background(), observer)
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
 
 func (s *connectableObservableImpl[T]) SubscribeWithContext(ctx context.Context, observer Observer[T]) Subscription {
-	return s.subject.SubscribeWithContext(ctx, observer)
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }

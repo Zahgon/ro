@@ -12,14 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package main
 
 import (
-	"context"
 	"fmt"
-	"strings"
-	"time"
 
 	"github.com/redis/go-redis/v9"
 	"github.com/samber/lo"
@@ -43,35 +39,9 @@ func init() {
 	rdb = redis.NewClient(opts)
 }
 
-func publishSink(roomID string, msg string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	defer cancel()
-
-	res := rdb.Publish(ctx, pubsubChannel+"."+roomID, msg)
-	return res.Err()
-}
+func publishSink(roomID string, msg string) error { _ = "STUB: not implemented"; return nil }
 
 func subscribeSource(destination ro.Observer[lo.Tuple2[string, string]]) ro.Teardown {
-	res := rdb.PSubscribe(context.Background(), pubsubChannel+".*")
-	ch := res.Channel()
-
-	go func() {
-		for {
-			select {
-			case msg, ok := <-ch:
-				if !ok {
-					destination.Complete()
-					return
-				}
-
-				roomID := strings.Replace(msg.Channel, pubsubChannel+".", "", 1)
-				destination.Next(lo.T2(roomID, msg.Payload))
-			}
-		}
-	}()
-
-	return func() {
-		res.Close()
-		rdb.Close()
-	}
+	_ = "STUB: not implemented"
+	return *new(ro.Teardown)
 }

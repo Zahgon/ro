@@ -15,10 +15,7 @@
 package rostdio
 
 import (
-	"bufio"
-	"context"
 	"io"
-	"os"
 
 	"github.com/samber/ro"
 )
@@ -27,96 +24,23 @@ const IOReaderBufferSize = 1024
 
 // NewIOReader creates an observable that reads bytes from an io.Reader.
 // Play: https://go.dev/play/p/b75Poy3EVYn
-func NewIOReader(reader io.Reader) ro.Observable[[]byte] {
-	return ro.NewUnsafeObservableWithContext(func(ctx context.Context, destination ro.Observer[[]byte]) ro.Teardown {
-		buf := make([]byte, IOReaderBufferSize)
-
-		for {
-			n, err := reader.Read(buf)
-			if err != nil {
-				if err == io.EOF {
-					destination.CompleteWithContext(ctx)
-				} else {
-					destination.ErrorWithContext(ctx, err)
-				}
-				break
-			}
-			destination.NextWithContext(ctx, buf[:n])
-		}
-
-		return func() {
-			if closer, ok := reader.(io.Closer); ok {
-				closer.Close()
-			}
-		}
-	})
-}
+func NewIOReader(reader io.Reader) ro.Observable[[]byte] { _ = "STUB: not implemented"; return nil }
 
 // NewIOReaderLine creates an observable that reads lines from an io.Reader.
 // Play: https://go.dev/play/p/oMv2jYVSLqd
-func NewIOReaderLine(reader io.Reader) ro.Observable[[]byte] {
-	return ro.NewUnsafeObservableWithContext(func(ctx context.Context, destination ro.Observer[[]byte]) ro.Teardown {
-		r := bufio.NewReader(reader)
-
-		for {
-			lines, _, err := r.ReadLine()
-			if err != nil {
-				if err == io.EOF {
-					destination.CompleteWithContext(ctx)
-				} else {
-					destination.ErrorWithContext(ctx, err)
-				}
-				break
-			}
-
-			output := make([]byte, len(lines))
-			copy(output, lines)
-			destination.NextWithContext(ctx, output)
-		}
-
-		return func() {
-			if closer, ok := reader.(io.Closer); ok {
-				closer.Close()
-			}
-		}
-	})
-}
+func NewIOReaderLine(reader io.Reader) ro.Observable[[]byte] { _ = "STUB: not implemented"; return nil }
 
 // NewStdReader creates an observable that reads bytes from standard input.
-func NewStdReader() ro.Observable[[]byte] {
-	return NewIOReader(os.Stdin)
-}
+func NewStdReader() ro.Observable[[]byte] { _ = "STUB: not implemented"; return nil }
 
 // NewStdReaderLine creates an observable that reads lines from standard input.
-func NewStdReaderLine() ro.Observable[[]byte] {
-	return NewIOReaderLine(os.Stdin)
-}
+func NewStdReaderLine() ro.Observable[[]byte] { _ = "STUB: not implemented"; return nil }
 
 // NewPrompt creates an observable that reads user input after displaying a prompt.
-func NewPrompt(prompt string) ro.Observable[[]byte] {
-	return ro.NewUnsafeObservableWithContext(func(ctx context.Context, destination ro.Observer[[]byte]) ro.Teardown {
-		for {
-			// Print the prompt to stdout
-			os.Stdout.WriteString(prompt)
+func NewPrompt(prompt string) ro.Observable[[]byte] { _ = "STUB: not implemented"; return nil }
 
-			// Read from stdin
-			reader := bufio.NewReader(os.Stdin)
-			line, _, err := reader.ReadLine()
-			if err != nil {
-				if err == io.EOF {
-					break
-				} else {
-					destination.ErrorWithContext(ctx, err)
-					return func() {}
-				}
-			}
+// Print the prompt to stdout
 
-			// Send the input as a byte slice
-			destination.NextWithContext(ctx, line)
-		}
+// Read from stdin
 
-		destination.CompleteWithContext(ctx)
-
-		return func() {}
-	})
-}
+// Send the input as a byte slice

@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rocsv
 
 import (
-	"context"
 	"encoding/csv"
 
 	"github.com/samber/ro"
@@ -25,37 +23,6 @@ import (
 // NewCSVWriter writes string slices to a CSV writer.
 // Play: https://go.dev/play/p/J6gzkUHIMgj
 func NewCSVWriter(writer *csv.Writer) func(ro.Observable[[]string]) ro.Observable[int] {
-	return func(source ro.Observable[[]string]) ro.Observable[int] {
-		return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[int]) ro.Teardown {
-			count := 0
-
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, row []string) {
-						err := writer.Write(row)
-						if err != nil {
-							writer.Flush()
-							destination.NextWithContext(ctx, count)
-							destination.ErrorWithContext(ctx, err)
-						} else {
-							count++
-						}
-					},
-					func(ctx context.Context, err error) {
-						writer.Flush()
-						destination.NextWithContext(ctx, count)
-						destination.ErrorWithContext(ctx, err)
-					},
-					func(ctx context.Context) {
-						writer.Flush()
-						destination.NextWithContext(ctx, count)
-						destination.CompleteWithContext(ctx)
-					},
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

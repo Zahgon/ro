@@ -15,50 +15,30 @@
 package rolog
 
 import (
-	"context"
-	"log"
-
 	"github.com/samber/ro"
 )
 
-func Log[T any]() func(ro.Observable[T]) ro.Observable[T] {
-	return LogWithPrefix[T]("")
-}
+func Log[T any]() func(ro.Observable[T]) ro.Observable[T] { _ = "STUB: not implemented"; return nil }
 
 func LogWithPrefix[T any](prefix string) func(ro.Observable[T]) ro.Observable[T] {
-	if prefix != "" {
-		prefix += " "
-	}
-
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			// bearer:disable go_lang_logger_leak
-			log.Printf("%sro.Next: %v", prefix, value)
-		},
-		func(ctx context.Context, err error) {
-			// bearer:disable go_lang_logger_leak
-			log.Printf("%sro.Error: %s", prefix, err.Error())
-		},
-		func(ctx context.Context) {
-			// bearer:disable go_lang_logger_leak
-			log.Printf("%sro.Complete", prefix)
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
+// bearer:disable go_lang_logger_leak
+
+// bearer:disable go_lang_logger_leak
+
+// bearer:disable go_lang_logger_leak
+
 func FatalOnError[T any]() func(ro.Observable[T]) ro.Observable[T] {
-	return FatalOnErrorWithPrefix[T]("")
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func FatalOnErrorWithPrefix[T any](prefix string) func(ro.Observable[T]) ro.Observable[T] {
-	if prefix != "" {
-		prefix += " "
-	}
-
-	return ro.TapOnErrorWithContext[T](
-		func(ctx context.Context, err error) {
-			// bearer:disable go_lang_logger_leak
-			log.Fatalf("%sro.Error: %s", prefix, err.Error())
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// bearer:disable go_lang_logger_leak

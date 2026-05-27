@@ -12,48 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rologrus
 
 import (
-	"context"
-
 	"github.com/samber/ro"
 	"github.com/sirupsen/logrus"
 )
 
 func Log[T any](logger *logrus.Logger, level logrus.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			logger.WithContext(ctx).Logf(level, "ro.Next: %v", value)
-		},
-		func(ctx context.Context, err error) {
-			logger.WithContext(ctx).Logf(level, "ro.Error: %s", err.Error())
-		},
-		func(ctx context.Context) {
-			logger.WithContext(ctx).Logf(level, "ro.Complete")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func LogWithNotification[T any](logger *logrus.Logger, level logrus.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			logger.WithContext(ctx).WithField("value", value).Logf(level, "ro.Next")
-		},
-		func(ctx context.Context, err error) {
-			logger.WithContext(ctx).WithError(err).Fatal("ro.Error")
-		},
-		func(ctx context.Context) {
-			logger.WithContext(ctx).Logf(level, "ro.Complete")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func FatalOnError[T any](logger *logrus.Logger) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapOnErrorWithContext[T](
-		func(ctx context.Context, err error) {
-			logger.WithContext(ctx).WithError(err).Fatal("ro.Error")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

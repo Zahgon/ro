@@ -15,106 +15,36 @@
 package roiter
 
 import (
-	"context"
 	"iter"
 
 	"github.com/samber/ro"
 )
 
 // ToSeq converts an observable to a Go sequence iterator.
-func ToSeq[T any](source ro.Observable[T]) iter.Seq[T] {
-	return func(yield func(T) bool) {
-		// Create channels for synchronization
-		values := make(chan T, 1)
-		done := make(chan struct{})
+func ToSeq[T any](source ro.Observable[T]) iter.Seq[T] { _ = "STUB: not implemented"; return nil }
 
-		// Create a context for cancellation
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
+// Create channels for synchronization
 
-		// Subscribe to the observable
-		sub := source.SubscribeWithContext(
-			ctx,
-			ro.NewObserverWithContext(
-				func(ctx context.Context, value T) {
-					select {
-					case values <- value:
-					case <-ctx.Done():
-					}
-				},
-				func(ctx context.Context, err error) {
-					defer close(done)
-					panic(err)
-				},
-				func(ctx context.Context) {
-					close(done)
-				},
-			),
-		)
+// Create a context for cancellation
 
-		// Clean up subscription
-		defer sub.Unsubscribe()
+// Subscribe to the observable
 
-		// Yield values as they arrive
-		for {
-			select {
-			case value := <-values:
-				if !yield(value) {
-					return
-				}
-			case <-done:
-				return
-			}
-		}
-	}
-}
+// Clean up subscription
+
+// Yield values as they arrive
 
 // ToSeq2 converts an observable to a Go sequence iterator with index-value pairs.
 func ToSeq2[T any](source ro.Observable[T]) iter.Seq2[int, T] {
-	return func(yield func(int, T) bool) {
-		// Create channels for synchronization
-		values := make(chan T, 1)
-		done := make(chan struct{})
-
-		// Create a context for cancellation
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-
-		// Subscribe to the observable
-		sub := source.SubscribeWithContext(
-			ctx,
-			ro.NewObserverWithContext(
-				func(ctx context.Context, value T) {
-					select {
-					case values <- value:
-					case <-ctx.Done():
-					}
-				},
-				func(ctx context.Context, err error) {
-					defer close(done)
-					panic(err)
-				},
-				func(ctx context.Context) {
-					close(done)
-				},
-			),
-		)
-
-		// Clean up subscription
-		defer sub.Unsubscribe()
-
-		// Yield key-value pairs as they arrive
-		i := 0
-		for {
-			select {
-			case value := <-values:
-				if !yield(i, value) {
-					return
-				}
-				i++
-			case <-done:
-				return
-			}
-		}
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Create channels for synchronization
+
+// Create a context for cancellation
+
+// Subscribe to the observable
+
+// Clean up subscription
+
+// Yield key-value pairs as they arrive

@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/samber/ro"
 )
 
 var upgrader = websocket.Upgrader{
@@ -29,58 +25,14 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func HandleWebsocket(w http.ResponseWriter, r *http.Request) {
-	roomID := r.URL.Query().Get("room")
-	fmt.Println("New WS with roomID:", roomID)
+func HandleWebsocket(w http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-	// upgrade connection
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Println(err)
-		return
-	}
+// upgrade connection
 
-	sub := ro.NewSubscription(nil)
+// close connection and unsubscribe from all streams
 
-	// close connection and unsubscribe from all streams
-	onClose := func() {
-		conn.Close()
-		sub.Unsubscribe()
-	}
+// websocket->redis (downstream)
 
-	// websocket->redis (downstream)
-	sub.AddUnsubscribable(
-		bridgeInstance.Subscribe(
-			roomID,
-			ro.NewObserver(
-				func(msg string) {
-					if err := conn.WriteMessage(websocket.TextMessage, []byte(msg)); err != nil {
-						log.Println(err)
-						onClose()
-					}
-				},
-				func(err error) {
-					log.Println(err)
-					onClose()
-				},
-				onClose,
-			),
-		),
-	)
+// redis->websocket (upstream)
 
-	// redis->websocket (upstream)
-	go func() {
-		defer onClose()
-
-		for {
-			_, msg, err := conn.ReadMessage()
-			if err != nil {
-				log.Println(err)
-				return
-			}
-
-			// log.Printf("received: %s", msg)
-			bridgeInstance.Publish(roomID, string(msg))
-		}
-	}()
-}
+// log.Printf("received: %s", msg)

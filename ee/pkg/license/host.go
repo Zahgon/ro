@@ -12,15 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rolicense
 
 import (
-	"crypto/rand"
-	"encoding/hex"
-	"fmt"
 	"sync"
-	"time"
 )
 
 var (
@@ -31,22 +26,12 @@ var (
 
 // getInstanceID returns the unique identifier for this instance.
 // The ID is generated once and cached for subsequent calls.
-func getInstanceID() string {
-	instanceIDOnce.Do(func() {
-		// Generate a random 16-byte identifier
-		bytes := make([]byte, 16)
-		if _, err := rand.Read(bytes); err != nil {
-			// Fallback to a timestamp-based ID if random generation fails
-			instanceID = fmt.Sprintf("instance-%d", time.Now().UnixNano())
-		} else {
-			instanceID = hex.EncodeToString(bytes)
-		}
-	})
-	return instanceID
-}
+func getInstanceID() string { _ = "STUB: not implemented"; return "" }
+
+// Generate a random 16-byte identifier
+
+// Fallback to a timestamp-based ID if random generation fails
 
 // GetInstanceID returns the unique identifier for this instance.
 // This is the public API for accessing the instance ID.
-func GetInstanceID() string {
-	return getInstanceID()
-}
+func GetInstanceID() string { _ = "STUB: not implemented"; return "" }

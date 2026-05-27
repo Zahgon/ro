@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package roregexp
 
 import (
@@ -24,99 +23,85 @@ import (
 // Find finds the first match of the pattern in the byte slice.
 // Play: https://go.dev/play/p/9hM7n8kL5jU
 func Find[T ~[]byte](pattern *regexp.Regexp) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(func(v T) T {
-		return pattern.Find(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FindString finds the first match of the pattern in the string.
 func FindString[T ~string](pattern *regexp.Regexp) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(func(v T) T {
-		return T(pattern.FindString(string(v)))
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FindSubmatch finds the first submatch of the pattern in the byte slice.
 func FindSubmatch[T ~[]byte](pattern *regexp.Regexp) func(ro.Observable[T]) ro.Observable[[][]byte] {
-	return ro.Map(func(v T) [][]byte {
-		return pattern.FindSubmatch(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FindStringSubmatch finds the first submatch of the pattern in the string.
 func FindStringSubmatch[T ~string](pattern *regexp.Regexp) func(ro.Observable[T]) ro.Observable[[]string] {
-	return ro.Map(func(v T) []string {
-		return pattern.FindStringSubmatch(string(v))
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FindAll finds all matches of the pattern in the byte slice.
 func FindAll[T ~[]byte](pattern *regexp.Regexp, n int) func(ro.Observable[T]) ro.Observable[[][]byte] {
-	return ro.Map(func(v T) [][]byte {
-		return pattern.FindAll(v, n)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FindAllString finds all matches of the pattern in the string.
 func FindAllString[T ~string](pattern *regexp.Regexp, n int) func(ro.Observable[T]) ro.Observable[[]string] {
-	return ro.Map(func(v T) []string {
-		return pattern.FindAllString(string(v), n)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FindAllSubmatch finds all submatches of the pattern in the byte slice.
 func FindAllSubmatch[T ~[]byte](pattern *regexp.Regexp, n int) func(ro.Observable[T]) ro.Observable[[][][]byte] {
-	return ro.Map(func(v T) [][][]byte {
-		return pattern.FindAllSubmatch(v, n)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FindAllStringSubmatch finds all submatches of the pattern in the string.
 func FindAllStringSubmatch[T ~string](pattern *regexp.Regexp, n int) func(ro.Observable[T]) ro.Observable[[][]string] {
-	return ro.Map(func(v T) [][]string {
-		return pattern.FindAllStringSubmatch(string(v), n)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Match checks if the pattern matches the byte slice.
 func Match[T ~[]byte](pattern *regexp.Regexp) func(ro.Observable[T]) ro.Observable[bool] {
-	return ro.Map(func(v T) bool {
-		return pattern.Match(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchString checks if the pattern matches the string.
 func MatchString[T ~string](pattern *regexp.Regexp) func(ro.Observable[T]) ro.Observable[bool] {
-	return ro.Map(func(v T) bool {
-		return pattern.MatchString(string(v))
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ReplaceAll replaces all matches of the pattern in the byte slice with the replacement.
 func ReplaceAll[T ~[]byte](pattern *regexp.Regexp, repl T) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(func(v T) T {
-		return pattern.ReplaceAll(v, repl)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ReplaceAllString replaces all matches of the pattern in the string with the replacement.
 func ReplaceAllString[T ~string](pattern *regexp.Regexp, repl T) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(func(v T) T {
-		return T(pattern.ReplaceAllString(string(v), string(repl)))
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FilterMatch filters the byte slice if it matches the pattern.
 func FilterMatch[T ~[]byte](pattern *regexp.Regexp) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.Filter(func(v T) bool {
-		return pattern.Match(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FilterMatchString filters the string if it matches the pattern.
 // Play: https://go.dev/play/p/9hM7n8kL5jU
 func FilterMatchString[T ~string](pattern *regexp.Regexp) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.Filter(func(v T) bool {
-		return pattern.MatchString(string(v))
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

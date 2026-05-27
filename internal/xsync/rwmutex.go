@@ -35,11 +35,7 @@ type RWMutex interface {
 var _ RWMutex = (*RWMutexWithLock)(nil)
 
 // NewRWMutexWithLock creates a new read-write mutex with a standard read-write mutex.
-func NewRWMutexWithLock() *RWMutexWithLock {
-	return &RWMutexWithLock{
-		mu: sync.RWMutex{},
-	}
-}
+func NewRWMutexWithLock() *RWMutexWithLock { _ = "STUB: not implemented"; return nil }
 
 // RWMutexWithLock is a read-write mutex with a standard read-write mutex.
 type RWMutexWithLock struct {
@@ -47,38 +43,40 @@ type RWMutexWithLock struct {
 }
 
 // TryLock tries to lock the mutex.
-func (m *RWMutexWithLock) TryLock() bool {
-	return m.mu.TryLock()
-}
+func (m *RWMutexWithLock) TryLock() bool { _ = "STUB: not implemented"; return false }
 
 // Lock locks the mutex.
 func (m *RWMutexWithLock) Lock() {
-	m.mu.Lock()
+	_ = "STUB: not implemented"
+
+	// Unlock unlocks the mutex.
+	return
 }
 
-// Unlock unlocks the mutex.
 func (m *RWMutexWithLock) Unlock() {
-	m.mu.Unlock()
+	_ = "STUB: not implemented"
+
+	// TryRLock tries to lock the mutex for reading.
+	return
 }
 
-// TryRLock tries to lock the mutex for reading.
-func (m *RWMutexWithLock) TryRLock() bool {
-	return m.mu.TryRLock()
-}
+func (m *RWMutexWithLock) TryRLock() bool { _ = "STUB: not implemented"; return false }
 
 // RLock locks the mutex for reading.
 func (m *RWMutexWithLock) RLock() {
-	m.mu.RLock()
+	_ = "STUB: not implemented"
+
+	// RUnlock unlocks the mutex for reading.
+	return
 }
 
-// RUnlock unlocks the mutex for reading.
 func (m *RWMutexWithLock) RUnlock() {
-	m.mu.RUnlock()
-}
+	_ = "STUB: not implemented"
 
-/************************
- *    Fast mutex        *
- ************************/
+	/************************
+	 *    Fast mutex        *
+	 ************************/return
+}
 
 // @TODO
 
@@ -89,35 +87,45 @@ func (m *RWMutexWithLock) RUnlock() {
 var _ RWMutex = (*RWMutexWithoutLock)(nil)
 
 // NewRWMutexWithoutLock creates a new read-write mutex without a lock.
-func NewRWMutexWithoutLock() *RWMutexWithoutLock {
-	return &RWMutexWithoutLock{}
-}
+func NewRWMutexWithoutLock() *RWMutexWithoutLock { _ = "STUB: not implemented"; return nil }
 
 // RWMutexWithoutLock is a read-write mutex without a lock.
 type RWMutexWithoutLock struct{}
 
 // TryLock always returns true.
 func (m *RWMutexWithoutLock) TryLock() bool {
-	return true
+	_ = "STUB: not implemented"
+
+	// Lock does nothing.
+	return false
 }
 
-// Lock does nothing.
 func (m *RWMutexWithoutLock) Lock() {
+	_ = "STUB: not implemented"
+
+	// Unlock does nothing.
+	return
 }
 
-// Unlock does nothing.
 func (m *RWMutexWithoutLock) Unlock() {
+	_ = "STUB: not implemented"
+
+	// TryRLock always returns true.
+	return
 }
 
-// TryRLock always returns true.
 func (m *RWMutexWithoutLock) TryRLock() bool {
-	return true
+	_ = "STUB: not implemented"
+
+	// RLock does nothing.
+	return false
 }
 
-// RLock does nothing.
 func (m *RWMutexWithoutLock) RLock() {
+	_ = "STUB: not implemented"
+
+	// RUnlock does nothing.
+	return
 }
 
-// RUnlock does nothing.
-func (m *RWMutexWithoutLock) RUnlock() {
-}
+func (m *RWMutexWithoutLock) RUnlock() { _ = "STUB: not implemented"; return }

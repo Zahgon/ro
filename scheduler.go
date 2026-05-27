@@ -16,21 +16,4 @@ package ro
 
 // NewScheduler just trolls other languages. 😈
 // https://reactivex.io/documentation/scheduler.html
-func NewScheduler() {
-	panic(`Just kidding. 😇
-
-Go is a modern programming language and doesn't need a scheduler.
-It has multithreading built-in, so you don't need to worry about it.
-
-If you come from PHP, Python, Javascript... welcome in the future! 🎉
-
-However, if you really want to Schedule() something such as a conference,
-a meetup, a business lunch or ...a date 😘, you can reach me here:
-	-> https://twitter.com/samuelberthe
-	-> https://bsky.app/samber
-
-More seriously, if you're looking for building a highly-parallel, concurrent,
-scalable and reliable stream processing app, use "samber/ro" package instead
-of "samber/so".
-`)
-}
+func NewScheduler() { _ = "STUB: not implemented"; return }

@@ -16,377 +16,173 @@ package ro
 
 import (
 	"context"
-	"sync"
-	"sync/atomic"
 	"time"
-
-	"github.com/samber/lo"
-	"github.com/samber/ro/internal/xsync"
-	"github.com/samber/ro/internal/xtime"
 )
 
 // Map applies a given project function to each item emitted by an Observable and emits the result.
 // Play: https://go.dev/play/p/JhTBEQFQGYr
 func Map[T, R any](project func(item T) R) func(Observable[T]) Observable[R] {
-	return MapIWithContext(func(ctx context.Context, v T, _ int64) (context.Context, R) {
-		return ctx, project(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MapWithContext applies a given project function to each item emitted by an Observable and emits the result.
 // Play: https://go.dev/play/p/b6i0jQenObW
 func MapWithContext[T, R any](project func(ctx context.Context, item T) (context.Context, R)) func(Observable[T]) Observable[R] {
-	return MapIWithContext(func(ctx context.Context, v T, _ int64) (context.Context, R) {
-		return project(ctx, v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MapI applies a given project function to each item emitted by an Observable and emits the result.
 // Play: https://go.dev/play/p/F8IKEdyC4sl
 func MapI[T, R any](project func(item T, index int64) R) func(Observable[T]) Observable[R] {
-	return MapIWithContext(func(ctx context.Context, v T, i int64) (context.Context, R) {
-		return ctx, project(v, i)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MapIWithContext applies a given project function to each item emitted by an Observable and emits the result.
 // Play: https://go.dev/play/p/dDFC9SU3FF1
 func MapIWithContext[T, R any](project func(ctx context.Context, item T, index int64) (context.Context, R)) func(Observable[T]) Observable[R] {
-	return func(source Observable[T]) Observable[R] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[R]) Teardown {
-			i := int64(0)
-
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						newCtx, result := project(ctx, value, i)
-						destination.NextWithContext(newCtx, result)
-
-						i++
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MapTo emits a constant value for each item emitted by an Observable.
 // Play: https://go.dev/play/p/Ghc5ar7GJag
 func MapTo[T, R any](output R) func(Observable[T]) Observable[R] {
-	return func(source Observable[T]) Observable[R] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[R]) Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						// ignore value
-						destination.NextWithContext(ctx, output)
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// ignore value
 
 // MapErr applies a given project function to each item emitted by an Observable and emits the result.
 // Play: https://go.dev/play/p/x7-KC-SDXr1
 func MapErr[T, R any](project func(item T) (R, error)) func(Observable[T]) Observable[R] {
-	return MapErrIWithContext(func(ctx context.Context, t T, _ int64) (R, context.Context, error) {
-		r, err := project(t)
-		return r, ctx, err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MapErrWithContext applies a given project function to each item emitted by an Observable and emits the result.
 // Play: https://go.dev/play/p/EIGtDpPq5y-
 func MapErrWithContext[T, R any](project func(ctx context.Context, item T) (R, context.Context, error)) func(Observable[T]) Observable[R] {
-	return MapErrIWithContext(func(ctx context.Context, t T, _ int64) (R, context.Context, error) {
-		return project(ctx, t)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MapErrI applies a given project function to each item emitted by an Observable and emits the result.
 // Play: https://go.dev/play/p/IAZJ9eQhNqN
 func MapErrI[T, R any](project func(item T, index int64) (R, error)) func(Observable[T]) Observable[R] {
-	return MapErrIWithContext(func(ctx context.Context, v T, i int64) (R, context.Context, error) {
-		r, err := project(v, i)
-		return r, ctx, err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MapErrIWithContext applies a given project function to each item emitted by an Observable and emits the result.
 // Play: https://go.dev/play/p/OO8FayqJesp
 func MapErrIWithContext[T, R any](project func(ctx context.Context, item T, index int64) (R, context.Context, error)) func(Observable[T]) Observable[R] {
-	return func(source Observable[T]) Observable[R] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[R]) Teardown {
-			count := int64(0)
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, t T) {
-						v, ctx, err := project(ctx, t, count)
-						count++
-
-						if err != nil {
-							destination.ErrorWithContext(ctx, err)
-							return
-						}
-
-						destination.NextWithContext(ctx, v)
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FlatMap transforms the items emitted by an Observable into Observables,
 // then flatten the emissions from those into a single Observable.
 // Play: https://go.dev/play/p/QBkDMwskibT
 func FlatMap[T, R any](project func(item T) Observable[R]) func(Observable[T]) Observable[R] {
-	return FlatMapI(func(v T, _ int64) Observable[R] {
-		return project(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FlatMapWithContext transforms the items emitted by an Observable into Observables,
 // then flatten the emissions from those into a single Observable.
 // Play: https://go.dev/play/p/lE04v4_lJ7M
 func FlatMapWithContext[T, R any](project func(ctx context.Context, item T) Observable[R]) func(Observable[T]) Observable[R] {
-	return FlatMapIWithContext(func(ctx context.Context, v T, _ int64) Observable[R] {
-		return project(ctx, v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FlatMapI transforms the items emitted by an Observable into Observables,
 // then flatten the emissions from those into a single Observable.
 // Play: https://go.dev/play/p/H04QF1dltPI
 func FlatMapI[T, R any](project func(item T, index int64) Observable[R]) func(Observable[T]) Observable[R] {
-	return FlatMapIWithContext(func(ctx context.Context, v T, i int64) Observable[R] {
-		return project(v, i)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FlatMapIWithContext transforms the items emitted by an Observable into Observables,
 // then flatten the emissions from those into a single Observable.
 // Play: https://go.dev/play/p/BCv4krqHEhI
 func FlatMapIWithContext[T, R any](project func(ctx context.Context, item T, index int64) Observable[R]) func(Observable[T]) Observable[R] {
-	return func(source Observable[T]) Observable[R] {
-		return ConcatAll[R]()(
-			NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[Observable[R]]) Teardown {
-				i := int64(0)
-
-				sub := source.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value T) {
-							destination.NextWithContext(ctx, project(ctx, value, i))
-
-							i++
-						},
-						destination.ErrorWithContext,
-						destination.CompleteWithContext,
-					),
-				)
-
-				return sub.Unsubscribe
-			}),
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Flatten flattens an Observable of Observables into a single Observable.
 // Play: https://go.dev/play/p/vUyrQ4GO87S
-func Flatten[T any]() func(Observable[[]T]) Observable[T] {
-	return func(source Observable[[]T]) Observable[T] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, value []T) {
-						for _, v := range value {
-							destination.NextWithContext(ctx, v)
-						}
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
-}
+func Flatten[T any]() func(Observable[[]T]) Observable[T] { _ = "STUB: not implemented"; return nil }
 
 // Cast converts each value emitted by an Observable into a specified type.
 // Play: https://go.dev/play/p/XUdqodfFyT6
-func Cast[T, U any]() func(Observable[T]) Observable[U] {
-	return func(source Observable[T]) Observable[U] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[U]) Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						if v, ok := any(value).(U); ok {
-							destination.NextWithContext(ctx, v)
-						} else {
-							destination.ErrorWithContext(ctx, newCastError[T, U]())
-						}
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
-}
+func Cast[T, U any]() func(Observable[T]) Observable[U] { _ = "STUB: not implemented"; return nil }
 
 // Scan applies an accumulator function over an Observable and emits each intermediate result.
 // Play: https://go.dev/play/p/gAzVq-a0Jiz
 func Scan[T, R any](reduce func(accumulator R, item T) R, seed R) func(Observable[T]) Observable[R] {
-	return ScanIWithContext(func(ctx context.Context, accumulator R, item T, _ int64) (context.Context, R) {
-		return ctx, reduce(accumulator, item)
-	}, seed)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ScanWithContext applies an accumulator function over an Observable and emits each intermediate result.
 func ScanWithContext[T, R any](reduce func(ctx context.Context, accumulator R, item T) (context.Context, R), seed R) func(Observable[T]) Observable[R] {
-	return ScanIWithContext(func(ctx context.Context, accumulator R, item T, _ int64) (context.Context, R) {
-		return reduce(ctx, accumulator, item)
-	}, seed)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ScanI applies an accumulator function over an Observable and emits each intermediate result.
 func ScanI[T, R any](reduce func(accumulator R, item T, index int64) R, seed R) func(Observable[T]) Observable[R] {
-	return ScanIWithContext(func(ctx context.Context, accumulator R, item T, index int64) (context.Context, R) {
-		return ctx, reduce(accumulator, item, index)
-	}, seed)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ScanIWithContext applies an accumulator function over an Observable and emits each intermediate result.
 // Play: https://go.dev/play/p/BG6OmY35v4x
 func ScanIWithContext[T, R any](reduce func(ctx context.Context, accumulator R, item T, index int64) (context.Context, R), seed R) func(Observable[T]) Observable[R] {
-	return func(source Observable[T]) Observable[R] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[R]) Teardown {
-			accumulator := seed
-			i := int64(0)
-
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						ctx, accumulator = reduce(ctx, accumulator, value, i)
-						i++
-
-						destination.NextWithContext(ctx, accumulator)
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GroupBy groups the items emitted by an Observable according to a specified criterion,
 // and emits these grouped items as Observables.
 // Play: https://go.dev/play/p/GOL8imC0H5S
 func GroupBy[T any, K comparable](iteratee func(item T) K) func(Observable[T]) Observable[Observable[T]] {
-	return GroupByIWithContext(func(ctx context.Context, item T, _ int64) (context.Context, K) {
-		return ctx, iteratee(item)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GroupByWithContext groups the items emitted by an Observable according to a specified criterion,
 // and emits these grouped items as Observables.
 func GroupByWithContext[T any, K comparable](iteratee func(ctx context.Context, item T) (context.Context, K)) func(Observable[T]) Observable[Observable[T]] {
-	return GroupByIWithContext(func(ctx context.Context, item T, _ int64) (context.Context, K) {
-		return iteratee(ctx, item)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GroupByI groups the items emitted by an Observable according to a specified criterion,
 // and emits these grouped items as Observables.
 func GroupByI[T any, K comparable](iteratee func(item T, index int64) K) func(Observable[T]) Observable[Observable[T]] {
-	return GroupByIWithContext(func(ctx context.Context, item T, index int64) (context.Context, K) {
-		return ctx, iteratee(item, index)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GroupByIWithContext groups the items emitted by an Observable according to a specified criterion,
 // and emits these grouped items as Observables.
 // Play: https://go.dev/play/p/h7vpeD0djre
 func GroupByIWithContext[T any, K comparable](iteratee func(ctx context.Context, item T, index int64) (context.Context, K)) func(Observable[T]) Observable[Observable[T]] {
-	return func(source Observable[T]) Observable[Observable[T]] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[Observable[T]]) Teardown {
-			groups := sync.Map{}
-			i := int64(0)
-
-			notifyAll := func(cb func(Observer[T])) {
-				groups.Range(func(key, value any) bool {
-					cb(value.(Observer[T])) //nolint:errcheck,forcetypeassert
-					return true
-				})
-			}
-
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						ctx, key := iteratee(ctx, value, i)
-						i++
-
-						g, ok := groups.Load(key)
-						if ok {
-							g.(Observer[T]).NextWithContext(ctx, value) //nolint:errcheck,forcetypeassert
-						} else if !ok {
-							subject := NewUnicastSubject[T](UnicastSubjectUnlimitedBufferSize)
-							groups.Store(key, subject)
-							subject.NextWithContext(ctx, value)
-							destination.NextWithContext(ctx, subject)
-						}
-					},
-					func(ctx context.Context, err error) {
-						destination.ErrorWithContext(ctx, err)
-						notifyAll(func(o Observer[T]) { o.ErrorWithContext(ctx, err) })
-
-						groups = sync.Map{}
-					},
-					func(ctx context.Context) {
-						destination.CompleteWithContext(ctx)
-						notifyAll(func(o Observer[T]) { o.CompleteWithContext(ctx) })
-
-						groups = sync.Map{}
-					},
-				),
-			)
-
-			return func() {
-				sub.Unsubscribe()
-				notifyAll(func(o Observer[T]) { o.CompleteWithContext(context.TODO()) })
-
-				groups = sync.Map{}
-			}
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+//nolint:errcheck,forcetypeassert
+
+//nolint:errcheck,forcetypeassert
 
 // BufferWhen buffers the items emitted by an Observable until a second Observable emits an item.
 // Then it emits the buffer and starts a new buffer. It repeats this process until the source Observable completes.
@@ -394,72 +190,11 @@ func GroupByIWithContext[T any, K comparable](iteratee func(ctx context.Context,
 // If the source Observable errors, the buffer is emitted and the error is propagated.
 // Play: https://go.dev/play/p/w8c_zuaLl9l
 func BufferWhen[T, B any](boundary Observable[B]) func(Observable[T]) Observable[[]T] {
-	return func(source Observable[T]) Observable[[]T] {
-		return NewObservableWithContext(func(subscriberCtx context.Context, destination Observer[[]T]) Teardown {
-			buffer := []T{}
-			mu := xsync.NewMutexWithSpinlock()
-
-			flush := func(ctx context.Context) {
-				// send even if buffer is empty
-				mu.Lock()
-
-				tmp := buffer
-				buffer = []T{}
-
-				mu.Unlock()
-
-				destination.NextWithContext(ctx, tmp)
-			}
-
-			subscriptions := NewSubscription(nil)
-
-			subscriptions.AddUnsubscribable(
-				source.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value T) {
-							mu.Lock()
-
-							buffer = append(buffer, value)
-
-							mu.Unlock()
-						},
-						destination.ErrorWithContext,
-						func(ctx context.Context) {
-							flush(ctx)
-							destination.CompleteWithContext(ctx)
-						},
-					),
-				),
-			)
-
-			subscriptions.AddUnsubscribable(
-				boundary.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value B) {
-							flush(ctx)
-						},
-						destination.ErrorWithContext,
-						func(ctx context.Context) {
-							flush(ctx)
-							destination.CompleteWithContext(ctx)
-						},
-					),
-				),
-			)
-
-			return func() {
-				subscriptions.Unsubscribe()
-				mu.Lock()
-
-				buffer = []T{}
-
-				mu.Unlock()
-			}
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// send even if buffer is empty
 
 // BufferWithTimeOrCount buffers the items emitted by an Observable for a specified time or count.
 // It emits the buffer and starts a new buffer. It repeats this process until the source Observable completes.
@@ -468,85 +203,11 @@ func BufferWhen[T, B any](boundary Observable[B]) func(Observable[T]) Observable
 // the buffer is emitted and a new buffer is started.
 // Play: https://go.dev/play/p/NyiF19jUdQD
 func BufferWithTimeOrCount[T any](size int, duration time.Duration) func(Observable[T]) Observable[[]T] {
-	if size < 1 {
-		panic(ErrBufferWithTimeOrCountWrongSize)
-	}
-
-	if duration <= 0 {
-		panic(ErrBufferWithTimeOrCountWrongDuration)
-	}
-
-	return func(source Observable[T]) Observable[[]T] {
-		return NewObservableWithContext(func(subscriberCtx context.Context, destination Observer[[]T]) Teardown {
-			buffer := []T{}
-			mu := xsync.NewMutexWithSpinlock()
-
-			flush := func(ctx context.Context) {
-				// send even if buffer is empty
-				mu.Lock()
-
-				tmp := buffer
-				buffer = []T{}
-
-				mu.Unlock()
-
-				destination.NextWithContext(ctx, tmp)
-			}
-
-			subscriptions := NewSubscription(nil)
-
-			subscriptions.AddUnsubscribable(
-				source.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value T) {
-							mu.Lock()
-
-							buffer = append(buffer, value)
-							isFull := len(buffer) >= size
-
-							mu.Unlock()
-
-							if isFull {
-								flush(ctx)
-							}
-						},
-						destination.ErrorWithContext,
-						func(ctx context.Context) {
-							flush(ctx)
-							destination.CompleteWithContext(ctx)
-						},
-					),
-				),
-			)
-
-			subscriptions.AddUnsubscribable(
-				Interval(duration).SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value int64) {
-							flush(ctx)
-						},
-						destination.ErrorWithContext,
-						func(ctx context.Context) {
-							flush(ctx)
-							destination.CompleteWithContext(ctx)
-						},
-					),
-				),
-			)
-
-			return func() {
-				subscriptions.Unsubscribe()
-				mu.Lock()
-
-				buffer = []T{}
-
-				mu.Unlock()
-			}
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// send even if buffer is empty
 
 // BufferWithCount buffers the items emitted by an Observable until the buffer is full.
 // Then it emits the buffer and starts a new buffer. It repeats this process until the
@@ -556,42 +217,8 @@ func BufferWithTimeOrCount[T any](size int, duration time.Duration) func(Observa
 // is emitted and a new buffer is started.
 // Play: https://go.dev/play/p/IXhDtSybE4R
 func BufferWithCount[T any](size int) func(Observable[T]) Observable[[]T] {
-	if size < 1 {
-		panic(ErrBufferWithCountWrongSize)
-	}
-
-	return func(source Observable[T]) Observable[[]T] {
-		return NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination Observer[[]T]) Teardown {
-			buffer := make([]T, 0, size)
-
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						buffer = append(buffer, value)
-						if len(buffer) >= size {
-							destination.NextWithContext(ctx, buffer)
-							buffer = make([]T, 0, size)
-						}
-					},
-					destination.ErrorWithContext,
-					func(ctx context.Context) {
-						if len(buffer) > 0 {
-							destination.NextWithContext(ctx, buffer)
-						}
-
-						destination.CompleteWithContext(ctx)
-					},
-				),
-			)
-
-			return func() {
-				sub.Unsubscribe()
-
-				buffer = []T{}
-			}
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // BufferWithTime buffers the items emitted by an Observable for a specified time.
@@ -601,11 +228,8 @@ func BufferWithCount[T any](size int) func(Observable[T]) Observable[[]T] {
 // notification is propagated. If the specified time is reached, the buffer is emitted and a new buffer is started.
 // Play: https://go.dev/play/p/TfOhP-f_O45
 func BufferWithTime[T any](duration time.Duration) func(Observable[T]) Observable[[]T] {
-	if duration <= 0 {
-		panic(ErrBufferWithTimeWrongDuration)
-	}
-
-	return BufferWhen[T](Interval(duration))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // WindowWhen emits an Observable that represents a window of items emitted by the source Observable.
@@ -615,87 +239,15 @@ func BufferWithTime[T any](duration time.Duration) func(Observable[T]) Observabl
 // Observable completes, the window emits the complete notification and the complete notification is propagated.
 // Play: https://go.dev/play/p/vK0elE-rPbl
 func WindowWhen[T, B any](boundary Observable[B]) func(Observable[T]) Observable[Observable[T]] {
-	return func(source Observable[T]) Observable[Observable[T]] {
-		return NewObservableWithContext(func(subscriberCtx context.Context, destination Observer[Observable[T]]) Teardown {
-			var window Subject[T]
-
-			mu := xsync.MutexWithSpinlock{}
-
-			flush := func(ctx context.Context, skipNew bool) {
-				// reset Observable even if no notification were sent
-				mu.Lock()
-
-				tmp := window
-
-				var newSubject Subject[T]
-				if !skipNew {
-					newSubject = NewUnicastSubject[T](UnicastSubjectUnlimitedBufferSize)
-					window = newSubject
-				}
-
-				mu.Unlock()
-
-				if tmp != nil { // nil on first call of flush()
-					tmp.CompleteWithContext(ctx)
-				}
-
-				if !skipNew {
-					destination.NextWithContext(ctx, newSubject)
-				}
-			}
-
-			flush(subscriberCtx, false) // create and send first window
-
-			subscriptions := NewSubscription(nil)
-
-			subscriptions.AddUnsubscribable(
-				source.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value T) {
-							mu.Lock()
-
-							tmp := window
-
-							mu.Unlock()
-
-							tmp.NextWithContext(ctx, value)
-						},
-						func(ctx context.Context, err error) {
-							flush(ctx, true)
-							destination.ErrorWithContext(ctx, err)
-						},
-						func(ctx context.Context) {
-							flush(ctx, true)
-							destination.CompleteWithContext(ctx)
-						},
-					),
-				),
-			)
-
-			subscriptions.AddUnsubscribable(
-				boundary.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value B) {
-							flush(ctx, false)
-						},
-						func(ctx context.Context, err error) {
-							flush(ctx, true)
-							destination.ErrorWithContext(ctx, err)
-						},
-						func(ctx context.Context) {
-							flush(ctx, true)
-							destination.CompleteWithContext(ctx)
-						},
-					),
-				),
-			)
-
-			return subscriptions.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// reset Observable even if no notification were sent
+
+// nil on first call of flush()
+
+// create and send first window
 
 // SampleWhen emits the most recently emitted value from the source Observable
 // within a period determined by another Observable?
@@ -705,61 +257,11 @@ func WindowWhen[T, B any](boundary Observable[B]) func(Observable[T]) Observable
 // emit no item for that sampling period.
 // Play: https://go.dev/play/p/tr4FEd-CSce
 func SampleWhen[T, t any](tick Observable[t]) func(Observable[T]) Observable[T] {
-	return func(source Observable[T]) Observable[T] {
-		return NewObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			var last lo.Tuple2[context.Context, T]
-
-			var hasValue bool
-
-			mu := xsync.NewMutexWithSpinlock()
-
-			subscriptions := NewSubscription(nil)
-
-			subscriptions.AddUnsubscribable(
-				source.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value T) {
-							mu.Lock()
-
-							last = lo.T2(ctx, value)
-							hasValue = true
-
-							mu.Unlock()
-						},
-						destination.ErrorWithContext,
-						destination.CompleteWithContext,
-					),
-				),
-			)
-
-			subscriptions.AddUnsubscribable(
-				tick.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value t) {
-							mu.Lock()
-
-							if hasValue {
-								hasValue = false
-								cOpy := last
-
-								// will be executed after mutex unlock
-								defer destination.NextWithContext(cOpy.A, cOpy.B)
-							}
-
-							mu.Unlock()
-						},
-						destination.ErrorWithContext,
-						destination.CompleteWithContext,
-					),
-				),
-			)
-
-			return subscriptions.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// will be executed after mutex unlock
 
 // SampleTime emits the most recently emitted value from the source Observable
 // within periodic time intervals.
@@ -769,87 +271,28 @@ func SampleWhen[T, t any](tick Observable[t]) func(Observable[T]) Observable[T] 
 // emit no item for that sampling period.
 // Play: https://go.dev/play/p/PcPo4lE9-_T
 func SampleTime[T any](interval time.Duration) func(Observable[T]) Observable[T] {
-	return SampleWhen[T](
-		Interval(interval),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ThrottleWhen emits a value from the source Observable, then ignores subsequent source
 // values for a duration determined by another Observable, then repeats this process.
 // Play: https://go.dev/play/p/q3ISV03EL3q
 func ThrottleWhen[T, t any](tick Observable[t]) func(Observable[T]) Observable[T] {
-	return func(source Observable[T]) Observable[T] {
-		return NewObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			// 0: don't send
-			// 1: send
-			var send int32
-
-			atomic.StoreInt32(&send, 0)
-
-			subscription := NewSubscription(nil)
-
-			// We must subscribe to `tick` first: if a synchronous Next notification
-			// is sent, the first value of `source` will be forward.
-			subscription.AddUnsubscribable(
-				tick.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value t) {
-							atomic.StoreInt32(&send, 1)
-						},
-						destination.ErrorWithContext,
-						destination.CompleteWithContext,
-					),
-				),
-			)
-
-			subscription.AddUnsubscribable(
-				source.SubscribeWithContext(
-					subscriberCtx,
-					NewObserverWithContext(
-						func(ctx context.Context, value T) {
-							if atomic.CompareAndSwapInt32(&send, 1, 0) {
-								destination.NextWithContext(ctx, value)
-							}
-						},
-						destination.ErrorWithContext,
-						destination.CompleteWithContext,
-					),
-				),
-			)
-
-			return subscription.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// 0: don't send
+// 1: send
+
+// We must subscribe to `tick` first: if a synchronous Next notification
+// is sent, the first value of `source` will be forward.
 
 // ThrottleTime emits a value from the source Observable, then ignores subsequent source
 // values for duration milliseconds, then repeats this process.
 // Play: https://go.dev/play/p/ITogsevmh88
 func ThrottleTime[T any](interval time.Duration) func(Observable[T]) Observable[T] {
-	intervalNano := interval.Nanoseconds()
-
-	return func(source Observable[T]) Observable[T] {
-		return NewObservableWithContext(func(subscriberCtx context.Context, destination Observer[T]) Teardown {
-			lastAt := int64(0)
-
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						now := xtime.NowNanoMonotonic()
-						if lastAt+intervalNano < now {
-							lastAt = now
-
-							destination.NextWithContext(ctx, value)
-						}
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

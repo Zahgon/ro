@@ -16,7 +16,6 @@ package ro
 
 import (
 	"context"
-	"sync/atomic"
 
 	"github.com/samber/ro/internal/xsync"
 )
@@ -44,7 +43,8 @@ var _ Subscriber[int] = (*subscriberImpl[int])(nil)
 //
 // It is rarely used as a public API.
 func NewSubscriber[T any](destination Observer[T]) Subscriber[T] {
-	return NewSafeSubscriber(destination)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewSafeSubscriber creates a new Subscriber from an Observer. If the Observer
@@ -58,7 +58,8 @@ func NewSubscriber[T any](destination Observer[T]) Subscriber[T] {
 //
 // It is rarely used as a public API.
 func NewSafeSubscriber[T any](destination Observer[T]) Subscriber[T] {
-	return NewSubscriberWithConcurrencyMode(destination, ConcurrencyModeSafe)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewUnsafeSubscriber creates a new Subscriber from an Observer. If the Observer
@@ -72,7 +73,8 @@ func NewSafeSubscriber[T any](destination Observer[T]) Subscriber[T] {
 //
 // It is rarely used as a public API.
 func NewUnsafeSubscriber[T any](destination Observer[T]) Subscriber[T] {
-	return NewSubscriberWithConcurrencyMode(destination, ConcurrencyModeUnsafe)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewEventuallySafeSubscriber creates a new Subscriber from an Observer. If the Observer
@@ -86,7 +88,8 @@ func NewUnsafeSubscriber[T any](destination Observer[T]) Subscriber[T] {
 //
 // It is rarely used as a public API.
 func NewEventuallySafeSubscriber[T any](destination Observer[T]) Subscriber[T] {
-	return NewSubscriberWithConcurrencyMode(destination, ConcurrencyModeEventuallySafe)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewSubscriberWithConcurrencyMode creates a new Subscriber from an Observer. If the Observer
@@ -98,45 +101,21 @@ func NewEventuallySafeSubscriber[T any](destination Observer[T]) Subscriber[T] {
 //
 // It is rarely used as a public API.
 func NewSubscriberWithConcurrencyMode[T any](destination Observer[T], mode ConcurrencyMode) Subscriber[T] {
+	_ = "STUB: not implemented"
 	// Spinlock is ignored because it is too slow when chaining operators. Spinlock should be used
 	// only for short-lived local locks.
-	switch mode {
-	case ConcurrencyModeSafe:
-		return newSubscriberImpl(mode, xsync.NewMutexWithLock(), BackpressureBlock, destination)
-	case ConcurrencyModeUnsafe:
-		return newSubscriberImpl(mode, xsync.NewMutexWithoutLock(), BackpressureBlock, destination)
-	case ConcurrencyModeEventuallySafe:
-		return newSubscriberImpl(mode, xsync.NewMutexWithLock(), BackpressureDrop, destination)
-	default:
-		panic("invalid concurrency mode")
-	}
+	return nil
 }
 
 // newSubscriberImpl creates a new subscriber implementation with the specified
 // synchronization behavior and destination observer.
 func newSubscriberImpl[T any](mode ConcurrencyMode, mu xsync.Mutex, backpressure Backpressure, destination Observer[T]) Subscriber[T] {
+	_ = "STUB: not implemented"
 	// Protect against multiple encapsulation layers.
-	if subscriber, ok := destination.(Subscriber[T]); ok {
-		return subscriber
-	}
-
-	subscriber := &subscriberImpl[T]{
-		status:       0, // KindNext
-		backpressure: backpressure,
-
-		mu:          mu,
-		destination: destination,
-
-		Subscription: NewSubscription(nil),
-		mode:         mode,
-	}
-
-	if subscription, ok := destination.(Subscription); ok {
-		subscription.Add(subscriber.Unsubscribe)
-	}
-
-	return subscriber
+	return nil
 }
+
+// KindNext
 
 type subscriberImpl[T any] struct {
 	// While mutex is used for synchronization of producer, status is used for storing state of
@@ -168,101 +147,46 @@ type subscriberImpl[T any] struct {
 }
 
 // Implements Observer.
-func (s *subscriberImpl[T]) Next(v T) {
-	s.NextWithContext(context.Background(), v)
-}
+func (s *subscriberImpl[T]) Next(v T) { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
 func (s *subscriberImpl[T]) NextWithContext(ctx context.Context, v T) {
-	if s.destination == nil {
-		return
-	}
-
-	if s.backpressure == BackpressureDrop {
-		if !s.mu.TryLock() {
-			OnDroppedNotification(ctx, NewNotificationNext(v))
-			return
-		}
-	} else {
-		s.mu.Lock()
-	}
-
-	if atomic.LoadInt32(&s.status) == 0 {
-		s.destination.NextWithContext(ctx, v)
-	} else {
-		OnDroppedNotification(ctx, NewNotificationNext(v))
-	}
-
-	s.mu.Unlock()
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements Observer.
-func (s *subscriberImpl[T]) Error(err error) {
-	s.ErrorWithContext(context.Background(), err)
-}
+func (s *subscriberImpl[T]) Error(err error) { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
 func (s *subscriberImpl[T]) ErrorWithContext(ctx context.Context, err error) {
-	s.mu.Lock()
-
-	if atomic.CompareAndSwapInt32(&s.status, 0, 1) {
-		if s.destination != nil {
-			s.destination.ErrorWithContext(ctx, err)
-		}
-	} else {
-		OnDroppedNotification(ctx, NewNotificationError[T](err))
-	}
-
-	s.mu.Unlock()
-
-	s.unsubscribe()
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements Observer.
-func (s *subscriberImpl[T]) Complete() {
-	s.CompleteWithContext(context.Background())
-}
+func (s *subscriberImpl[T]) Complete() { _ = "STUB: not implemented"; return }
 
 // Implements Observer.
 func (s *subscriberImpl[T]) CompleteWithContext(ctx context.Context) {
-	s.mu.Lock()
-
-	if atomic.CompareAndSwapInt32(&s.status, 0, 2) {
-		if s.destination != nil {
-			s.destination.CompleteWithContext(ctx)
-		}
-	} else {
-		OnDroppedNotification(ctx, NewNotificationComplete[T]())
-	}
-
-	s.mu.Unlock()
-
-	s.unsubscribe()
+	_ = "STUB: not implemented"
+	return
 }
 
 // Implements Observer.
-func (s *subscriberImpl[T]) IsClosed() bool {
-	return atomic.LoadInt32(&s.status) != 0
-}
+func (s *subscriberImpl[T]) IsClosed() bool { _ = "STUB: not implemented"; return false }
 
 // Implements Observer.
-func (s *subscriberImpl[T]) HasThrown() bool {
-	return atomic.LoadInt32(&s.status) == 1
-}
+func (s *subscriberImpl[T]) HasThrown() bool { _ = "STUB: not implemented"; return false }
 
 // Implements Observer.
-func (s *subscriberImpl[T]) IsCompleted() bool {
-	return atomic.LoadInt32(&s.status) == 2
-}
+func (s *subscriberImpl[T]) IsCompleted() bool { _ = "STUB: not implemented"; return false }
 
 // Implements Observer.
-func (s *subscriberImpl[T]) Unsubscribe() {
-	if atomic.CompareAndSwapInt32(&s.status, 0, 2) {
-		s.unsubscribe()
-	}
-}
+func (s *subscriberImpl[T]) Unsubscribe() { _ = "STUB: not implemented"; return }
 
 func (s *subscriberImpl[T]) unsubscribe() {
+	_ = "STUB: not implemented"
 	// s.Subscription.Unsubscribe() is protected against concurrent calls.
-	s.Subscription.Unsubscribe()
+	return
 }

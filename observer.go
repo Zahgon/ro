@@ -16,10 +16,6 @@ package ro
 
 import (
 	"context"
-	"fmt"
-	"sync/atomic"
-
-	"github.com/samber/lo"
 )
 
 // Observer is the consumer of an Observable. It receives notifications: Next,
@@ -65,29 +61,15 @@ var _ Observer[int] = (*observerImpl[int])(nil)
 // NewObserver creates a new Observer with the provided callbacks. No context
 // is provided.
 func NewObserver[T any](onNext func(value T), onError func(err error), onComplete func()) Observer[T] {
-	return &observerImpl[T]{
-		status: 0,
-		onNext: func(ctx context.Context, value T) {
-			onNext(value)
-		},
-		onError: func(ctx context.Context, err error) {
-			onError(err)
-		},
-		onComplete: func(ctx context.Context) {
-			onComplete()
-		},
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewObserverWithContext creates a new Observer with the provided callbacks. A context
 // is provided to each callback.
 func NewObserverWithContext[T any](onNext func(ctx context.Context, value T), onError func(ctx context.Context, err error), onComplete func(ctx context.Context)) Observer[T] {
-	return &observerImpl[T]{
-		status:     0,
-		onNext:     onNext,
-		onError:    onError,
-		onComplete: onComplete,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type observerImpl[T any] struct {
@@ -100,100 +82,41 @@ type observerImpl[T any] struct {
 	onComplete func(context.Context)
 }
 
-func (o *observerImpl[T]) Next(value T) {
-	o.NextWithContext(context.Background(), value)
-}
+func (o *observerImpl[T]) Next(value T) { _ = "STUB: not implemented"; return }
 
 func (o *observerImpl[T]) NextWithContext(ctx context.Context, value T) {
-	if o.onNext == nil || atomic.LoadInt32(&o.status) != 0 {
-		OnDroppedNotification(ctx, NewNotificationNext(value))
-		return
-	}
-
-	o.tryNext(ctx, value)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (o *observerImpl[T]) Error(err error) {
-	o.ErrorWithContext(context.Background(), err)
-}
+func (o *observerImpl[T]) Error(err error) { _ = "STUB: not implemented"; return }
 
 func (o *observerImpl[T]) ErrorWithContext(ctx context.Context, err error) {
-	if o.onError == nil || !atomic.CompareAndSwapInt32(&o.status, 0, 1) {
-		OnDroppedNotification(ctx, NewNotificationError[T](err))
-		return
-	}
-
-	o.tryError(ctx, err)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (o *observerImpl[T]) Complete() {
-	o.CompleteWithContext(context.Background())
-}
+func (o *observerImpl[T]) Complete() { _ = "STUB: not implemented"; return }
 
 func (o *observerImpl[T]) CompleteWithContext(ctx context.Context) {
-	if o.onComplete == nil || !atomic.CompareAndSwapInt32(&o.status, 0, 2) {
-		OnDroppedNotification(ctx, NewNotificationComplete[T]())
-		return
-	}
-
-	o.tryComplete(ctx)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (o *observerImpl[T]) tryNext(ctx context.Context, value T) {
-	lo.TryCatchWithErrorValue(
-		func() error {
-			o.onNext(ctx, value)
-			return nil
-		},
-		func(e any) {
-			err := newObserverError(recoverValueToError(e))
-
-			if o.onError == nil {
-				OnUnhandledError(ctx, err)
-			} else {
-				o.tryError(ctx, err)
-			}
-		},
-	)
-}
+func (o *observerImpl[T]) tryNext(ctx context.Context, value T) { _ = "STUB: not implemented"; return }
 
 func (o *observerImpl[T]) tryError(ctx context.Context, err error) {
-	lo.TryCatchWithErrorValue(
-		func() error {
-			o.onError(ctx, err)
-			return nil
-		},
-		func(e any) {
-			err := newObserverError(recoverValueToError(e))
-			OnUnhandledError(ctx, err)
-		},
-	)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (o *observerImpl[T]) tryComplete(ctx context.Context) {
-	lo.TryCatchWithErrorValue(
-		func() error {
-			o.onComplete(ctx)
-			return nil
-		},
-		func(e any) {
-			err := newObserverError(recoverValueToError(e))
-			OnUnhandledError(ctx, err)
-		},
-	)
-}
+func (o *observerImpl[T]) tryComplete(ctx context.Context) { _ = "STUB: not implemented"; return }
 
-func (o *observerImpl[T]) IsClosed() bool {
-	return atomic.LoadInt32(&o.status) != 0
-}
+func (o *observerImpl[T]) IsClosed() bool { _ = "STUB: not implemented"; return false }
 
-func (o *observerImpl[T]) HasThrown() bool {
-	return atomic.LoadInt32(&o.status) == 1
-}
+func (o *observerImpl[T]) HasThrown() bool { _ = "STUB: not implemented"; return false }
 
-func (o *observerImpl[T]) IsCompleted() bool {
-	return atomic.LoadInt32(&o.status) == 2
-}
+func (o *observerImpl[T]) IsCompleted() bool { _ = "STUB: not implemented"; return false }
 
 /*********************
  * Partial Observers *
@@ -201,77 +124,38 @@ func (o *observerImpl[T]) IsCompleted() bool {
 
 // OnNext is a partial Observer with only the Next method implemented.
 // Warning: This observer will silent errors.
-func OnNext[T any](onNext func(value T)) Observer[T] {
-	onError := func(err error) {}
-	onComplete := func() {}
-
-	return NewObserver(onNext, onError, onComplete)
-}
+func OnNext[T any](onNext func(value T)) Observer[T] { _ = "STUB: not implemented"; return nil }
 
 // OnNextWithContext is a partial Observer with only the Next method implemented.
 // Warning: This observer will silent errors.
 func OnNextWithContext[T any](onNext func(ctx context.Context, value T)) Observer[T] {
-	onError := func(ctx context.Context, err error) {}
-	onComplete := func(ctx context.Context) {}
-
-	return NewObserverWithContext(onNext, onError, onComplete)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnError is a partial Observer with only the Error method implemented.
-func OnError[T any](onError func(err error)) Observer[T] {
-	onNext := func(value T) {}
-	onComplete := func() {}
-
-	return NewObserver(onNext, onError, onComplete)
-}
+func OnError[T any](onError func(err error)) Observer[T] { _ = "STUB: not implemented"; return nil }
 
 // OnErrorWithContext is a partial Observer with only the Error method implemented.
 func OnErrorWithContext[T any](onError func(ctx context.Context, err error)) Observer[T] {
-	onNext := func(ctx context.Context, value T) {}
-	onComplete := func(ctx context.Context) {}
-
-	return NewObserverWithContext(onNext, onError, onComplete)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnComplete is a partial Observer with only the Complete method implemented.
 // Warning: This observer will silent errors.
-func OnComplete[T any](onComplete func()) Observer[T] {
-	onNext := func(value T) {}
-	onError := func(err error) {}
-
-	return NewObserver(onNext, onError, onComplete)
-}
+func OnComplete[T any](onComplete func()) Observer[T] { _ = "STUB: not implemented"; return nil }
 
 // OnCompleteWithContext is a partial Observer with only the Complete method implemented.
 // Warning: This observer will silent errors.
 func OnCompleteWithContext[T any](onComplete func(ctx context.Context)) Observer[T] {
-	onNext := func(ctx context.Context, value T) {}
-	onError := func(ctx context.Context, err error) {}
-
-	return NewObserverWithContext(onNext, onError, onComplete)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NoopObserver is an Observer that does nothing.
 // Warning: This observer will silent errors.
-func NoopObserver[T any]() Observer[T] {
-	return NewObserverWithContext(
-		func(ctx context.Context, value T) {},
-		func(ctx context.Context, err error) {},
-		func(ctx context.Context) {},
-	)
-}
+func NoopObserver[T any]() Observer[T] { _ = "STUB: not implemented"; return nil }
 
 // PrintObserver is an utilitary Observer that dump notifications for debug purpose.
-func PrintObserver[T any]() Observer[T] {
-	return NewObserverWithContext(
-		func(ctx context.Context, value T) {
-			fmt.Printf("Next: %v\n", value)
-		},
-		func(ctx context.Context, err error) {
-			fmt.Printf("Error: %s\n", err.Error())
-		},
-		func(ctx context.Context) {
-			fmt.Printf("Completed\n")
-		},
-	)
-}
+func PrintObserver[T any]() Observer[T] { _ = "STUB: not implemented"; return nil }

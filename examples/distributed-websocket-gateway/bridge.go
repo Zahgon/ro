@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package main
 
 import (
@@ -22,39 +21,15 @@ import (
 
 var bridgeInstance *bridge
 
-func initStreams() {
-	bridgeInstance = newEchange()
-}
+func initStreams() { _ = "STUB: not implemented"; return }
 
-func closeStreams() {
-	bridgeInstance.Close()
-}
+func closeStreams() { _ = "STUB: not implemented"; return }
 
-func newEchange() *bridge {
-	e := &bridge{
-		upstream:      ro.NewPublishSubject[lo.Tuple2[string, string]](),
-		downstream:    ro.NewReplaySubject[lo.Tuple2[string, string]](10_000),
-		subscriptions: ro.NewSubscription(nil),
-	}
+func newEchange() *bridge { _ = "STUB: not implemented"; return nil }
 
-	// websocket->redis (downstream)
-	e.subscriptions.AddUnsubscribable(
-		e.upstream.
-			Subscribe(
-				ro.OnNext(func(msg lo.Tuple2[string, string]) {
-					publishSink(msg.A, msg.B)
-				}),
-			),
-	)
+// websocket->redis (downstream)
 
-	// redis->websocket (upstream)
-	e.subscriptions.AddUnsubscribable(
-		ro.NewObservable(subscribeSource).
-			Subscribe(e.downstream),
-	)
-
-	return e
-}
+// redis->websocket (upstream)
 
 type bridge struct {
 	upstream      ro.Subject[lo.Tuple2[string, string]]
@@ -62,29 +37,13 @@ type bridge struct {
 	subscriptions ro.Subscription
 }
 
-func (e *bridge) Publish(roomID string, msg string) {
-	e.upstream.Next(lo.T2(roomID, msg))
-}
+func (e *bridge) Publish(roomID string, msg string) { _ = "STUB: not implemented"; return }
 
 func (e *bridge) Subscribe(roomID string, destination ro.Observer[string]) ro.Subscription {
-	sub := ro.Pipe2(
-		e.downstream.AsObservable(),
-		ro.Filter(func(msg lo.Tuple2[string, string]) bool {
-			// exclude messages from other rooms
-			return msg.A == roomID
-		}),
-		ro.Map(func(msg lo.Tuple2[string, string]) string {
-			return msg.B
-		}),
-	).Subscribe(destination)
-
-	e.subscriptions.AddUnsubscribable(sub)
-
-	return sub
+	_ = "STUB: not implemented"
+	return *new(ro.Subscription)
 }
 
-func (e *bridge) Close() {
-	e.upstream.Complete()
-	e.downstream.Complete()
-	e.subscriptions.Unsubscribe()
-}
+// exclude messages from other rooms
+
+func (e *bridge) Close() { _ = "STUB: not implemented"; return }

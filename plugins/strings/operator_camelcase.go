@@ -15,29 +15,14 @@
 package rostrings
 
 import (
-	"strings"
-
 	"github.com/samber/ro"
 )
 
-func toCamelCase(str string) string {
-	items := words(str)
-	for i, item := range items {
-		item = strings.ToLower(item)
-		if i > 0 {
-			item = capitalize(item)
-		}
-		items[i] = item
-	}
-	return strings.Join(items, "")
-}
+func toCamelCase(str string) string { _ = "STUB: not implemented"; return "" }
 
 // CamelCase converts the string to camel case.
 // Play: https://go.dev/play/p/MMmhpwApG1y
 func CamelCase[T ~string]() func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(toCamelCase(string(value)))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -15,25 +15,14 @@
 package robytes
 
 import (
-	"bytes"
-
 	"github.com/samber/ro"
 )
 
-func snakeCase(str []byte) []byte {
-	items := words(str)
-	for i := range items {
-		items[i] = bytes.ToLower(items[i])
-	}
-	return bytes.Join(items, []byte{'_'})
-}
+func snakeCase(str []byte) []byte { _ = "STUB: not implemented"; return nil }
 
 // SnakeCase converts the string to snake case.
 // Play: https://go.dev/play/p/Cf5GQNC9KpW
 func SnakeCase[T ~[]byte]() func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(snakeCase(value))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

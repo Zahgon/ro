@@ -14,10 +14,6 @@
 
 package ro
 
-import (
-	"reflect"
-)
-
 // Pipe builds a composition of operators that will be chained to transform
 // an observable stream. It provides a clean, declarative way to describe
 // complex asynchronous operations.
@@ -26,44 +22,23 @@ import (
 //
 // `PipeOp()` is the operator version of `Pipe()`.
 func Pipe[First, Last any](source Observable[First], operators ...any) Observable[Last] {
-	o := reflect.ValueOf(source)
-
-	// Since generic type can vary for each operator, we decided to use reflection and validate
-	// types at runtime. Type is not check for each message but only at Pipe() call.
-	// This is a peace of shit. If anybody find a better way to do it, please contribute!!
-	for _, operator := range operators {
-		funcValue := reflect.ValueOf(operator)
-
-		// check operator is a function with 1 input and 1 output
-		if funcValue.Type().Kind() != reflect.Func || funcValue.Type().NumIn() != 1 || funcValue.Type().NumOut() != 1 {
-			panic(newPipeError("%s is not an operator", funcValue.Type()))
-		}
-		// check operator input implements Observable[T]
-		if funcValue.Type().In(0).Kind() != reflect.Interface {
-			panic(newPipeError("%s does not implements Observable[T]", funcValue.Type().In(0)))
-		}
-		// check operator output implements Observable[T]
-		if funcValue.Type().Out(0).Kind() != reflect.Interface {
-			panic(newPipeError("%s does not implements Observable[T]", funcValue.Type().Out(0)))
-		}
-		// check operator input implements source Observable[T]
-		if !o.Type().Implements(funcValue.Type().In(0)) {
-			panic(newPipeError("%s does not implements %s", o.Type(), funcValue.Type().In(0)))
-		}
-
-		o = funcValue.Call([]reflect.Value{o})[0]
-	}
-
-	// check operator output implements destination Observable[T]
-	mock := reflect.TypeOf((*Observable[Last])(nil)).Elem()
-	if !o.Type().Implements(mock) {
-		panic(newPipeError("%s does not implements %s", o.Type(), mock))
-	}
-
-	v, _ := o.Interface().(Observable[Last])
-
-	return v
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Since generic type can vary for each operator, we decided to use reflection and validate
+// types at runtime. Type is not check for each message but only at Pipe() call.
+// This is a peace of shit. If anybody find a better way to do it, please contribute!!
+
+// check operator is a function with 1 input and 1 output
+
+// check operator input implements Observable[T]
+
+// check operator output implements Observable[T]
+
+// check operator input implements source Observable[T]
+
+// check operator output implements destination Observable[T]
 
 // Pipe1 is a typesafe 🎉 implementation of Pipe, that takes a source and 1 operator.
 //
@@ -72,20 +47,21 @@ func Pipe1[A, B any](
 	source Observable[A],
 	operator1 func(Observable[A]) Observable[B],
 ) Observable[B] {
-	return operator1(source)
+	_ = "STUB: not implemented"
+	return nil
+
+	// Pipe2 is a typesafe 🎉 implementation of Pipe, that takes a source and 2 operators.
+	//
+	// `PipeOp2()` is the operator version of `Pipe2()`.
 }
 
-// Pipe2 is a typesafe 🎉 implementation of Pipe, that takes a source and 2 operators.
-//
-// `PipeOp2()` is the operator version of `Pipe2()`.
 func Pipe2[A, B, C any](
 	source Observable[A],
 	operator1 func(Observable[A]) Observable[B],
 	operator2 func(Observable[B]) Observable[C],
 ) Observable[C] {
-	return operator2(
-		operator1(source),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe3 is a typesafe 🎉 implementation of Pipe, that takes a source and 3 operators.
@@ -97,11 +73,8 @@ func Pipe3[A, B, C, D any](
 	operator2 func(Observable[B]) Observable[C],
 	operator3 func(Observable[C]) Observable[D],
 ) Observable[D] {
-	return operator3(
-		operator2(
-			operator1(source),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe4 is a typesafe 🎉 implementation of Pipe, that takes a source and 4 operators.
@@ -114,13 +87,8 @@ func Pipe4[A, B, C, D, E any](
 	operator3 func(Observable[C]) Observable[D],
 	operator4 func(Observable[D]) Observable[E],
 ) Observable[E] {
-	return operator4(
-		operator3(
-			operator2(
-				operator1(source),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe5 is a typesafe 🎉 implementation of Pipe, that takes a source and 5 operators.
@@ -134,15 +102,8 @@ func Pipe5[A, B, C, D, E, F any](
 	operator4 func(Observable[D]) Observable[E],
 	operator5 func(Observable[E]) Observable[F],
 ) Observable[F] {
-	return operator5(
-		operator4(
-			operator3(
-				operator2(
-					operator1(source),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe6 is a typesafe 🎉 implementation of Pipe, that takes a source and 6 operators.
@@ -157,17 +118,8 @@ func Pipe6[A, B, C, D, E, F, G any](
 	operator5 func(Observable[E]) Observable[F],
 	operator6 func(Observable[F]) Observable[G],
 ) Observable[G] {
-	return operator6(
-		operator5(
-			operator4(
-				operator3(
-					operator2(
-						operator1(source),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe7 is a typesafe 🎉 implementation of Pipe, that takes a source and 7 operators.
@@ -183,19 +135,8 @@ func Pipe7[A, B, C, D, E, F, G, H any](
 	operator6 func(Observable[F]) Observable[G],
 	operator7 func(Observable[G]) Observable[H],
 ) Observable[H] {
-	return operator7(
-		operator6(
-			operator5(
-				operator4(
-					operator3(
-						operator2(
-							operator1(source),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe8 is a typesafe 🎉 implementation of Pipe, that takes a source and 8 operators.
@@ -212,21 +153,8 @@ func Pipe8[A, B, C, D, E, F, G, H, I any](
 	operator7 func(Observable[G]) Observable[H],
 	operator8 func(Observable[H]) Observable[I],
 ) Observable[I] {
-	return operator8(
-		operator7(
-			operator6(
-				operator5(
-					operator4(
-						operator3(
-							operator2(
-								operator1(source),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe9 is a typesafe 🎉 implementation of Pipe, that takes a source and 9 operators.
@@ -244,23 +172,8 @@ func Pipe9[A, B, C, D, E, F, G, H, I, J any](
 	operator8 func(Observable[H]) Observable[I],
 	operator9 func(Observable[I]) Observable[J],
 ) Observable[J] {
-	return operator9(
-		operator8(
-			operator7(
-				operator6(
-					operator5(
-						operator4(
-							operator3(
-								operator2(
-									operator1(source),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe10 is a typesafe 🎉 implementation of Pipe, that takes a source and 10 operators.
@@ -279,25 +192,8 @@ func Pipe10[A, B, C, D, E, F, G, H, I, J, K any](
 	operator9 func(Observable[I]) Observable[J],
 	operator10 func(Observable[J]) Observable[K],
 ) Observable[K] {
-	return operator10(
-		operator9(
-			operator8(
-				operator7(
-					operator6(
-						operator5(
-							operator4(
-								operator3(
-									operator2(
-										operator1(source),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe11 is a typesafe 🎉 implementation of Pipe, that takes a source and 11 operators.
@@ -317,27 +213,8 @@ func Pipe11[A, B, C, D, E, F, G, H, I, J, K, L any](
 	operator10 func(Observable[J]) Observable[K],
 	operator11 func(Observable[K]) Observable[L],
 ) Observable[L] {
-	return operator11(
-		operator10(
-			operator9(
-				operator8(
-					operator7(
-						operator6(
-							operator5(
-								operator4(
-									operator3(
-										operator2(
-											operator1(source),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe12 is a typesafe 🎉 implementation of Pipe, that takes a source and 12 operators.
@@ -358,29 +235,8 @@ func Pipe12[A, B, C, D, E, F, G, H, I, J, K, L, M any](
 	operator11 func(Observable[K]) Observable[L],
 	operator12 func(Observable[L]) Observable[M],
 ) Observable[M] {
-	return operator12(
-		operator11(
-			operator10(
-				operator9(
-					operator8(
-						operator7(
-							operator6(
-								operator5(
-									operator4(
-										operator3(
-											operator2(
-												operator1(source),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe13 is a typesafe 🎉 implementation of Pipe, that takes a source and 13 operators.
@@ -402,31 +258,8 @@ func Pipe13[A, B, C, D, E, F, G, H, I, J, K, L, M, N any](
 	operator12 func(Observable[L]) Observable[M],
 	operator13 func(Observable[M]) Observable[N],
 ) Observable[N] {
-	return operator13(
-		operator12(
-			operator11(
-				operator10(
-					operator9(
-						operator8(
-							operator7(
-								operator6(
-									operator5(
-										operator4(
-											operator3(
-												operator2(
-													operator1(source),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe14 is a typesafe 🎉 implementation of Pipe, that takes a source and 14 operators.
@@ -449,33 +282,8 @@ func Pipe14[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O any](
 	operator13 func(Observable[M]) Observable[N],
 	operator14 func(Observable[N]) Observable[O],
 ) Observable[O] {
-	return operator14(
-		operator13(
-			operator12(
-				operator11(
-					operator10(
-						operator9(
-							operator8(
-								operator7(
-									operator6(
-										operator5(
-											operator4(
-												operator3(
-													operator2(
-														operator1(source),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe15 is a typesafe 🎉 implementation of Pipe, that takes a source and 15 operators.
@@ -499,35 +307,8 @@ func Pipe15[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P any](
 	operator14 func(Observable[N]) Observable[O],
 	operator15 func(Observable[O]) Observable[P],
 ) Observable[P] {
-	return operator15(
-		operator14(
-			operator13(
-				operator12(
-					operator11(
-						operator10(
-							operator9(
-								operator8(
-									operator7(
-										operator6(
-											operator5(
-												operator4(
-													operator3(
-														operator2(
-															operator1(source),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe16 is a typesafe 🎉 implementation of Pipe, that takes a source and 16 operators.
@@ -552,37 +333,8 @@ func Pipe16[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q any](
 	operator15 func(Observable[O]) Observable[P],
 	operator16 func(Observable[P]) Observable[Q],
 ) Observable[Q] {
-	return operator16(
-		operator15(
-			operator14(
-				operator13(
-					operator12(
-						operator11(
-							operator10(
-								operator9(
-									operator8(
-										operator7(
-											operator6(
-												operator5(
-													operator4(
-														operator3(
-															operator2(
-																operator1(source),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe17 is a typesafe 🎉 implementation of Pipe, that takes a source and 17 operators.
@@ -608,39 +360,8 @@ func Pipe17[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R any](
 	operator16 func(Observable[P]) Observable[Q],
 	operator17 func(Observable[Q]) Observable[R],
 ) Observable[R] {
-	return operator17(
-		operator16(
-			operator15(
-				operator14(
-					operator13(
-						operator12(
-							operator11(
-								operator10(
-									operator9(
-										operator8(
-											operator7(
-												operator6(
-													operator5(
-														operator4(
-															operator3(
-																operator2(
-																	operator1(source),
-																),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe18 is a typesafe 🎉 implementation of Pipe, that takes a source and 18 operators.
@@ -667,41 +388,8 @@ func Pipe18[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S any](
 	operator17 func(Observable[Q]) Observable[R],
 	operator18 func(Observable[R]) Observable[S],
 ) Observable[S] {
-	return operator18(
-		operator17(
-			operator16(
-				operator15(
-					operator14(
-						operator13(
-							operator12(
-								operator11(
-									operator10(
-										operator9(
-											operator8(
-												operator7(
-													operator6(
-														operator5(
-															operator4(
-																operator3(
-																	operator2(
-																		operator1(source),
-																	),
-																),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe19 is a typesafe 🎉 implementation of Pipe, that takes a source and 19 operators.
@@ -729,43 +417,8 @@ func Pipe19[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T any](
 	operator18 func(Observable[R]) Observable[S],
 	operator19 func(Observable[S]) Observable[T],
 ) Observable[T] {
-	return operator19(
-		operator18(
-			operator17(
-				operator16(
-					operator15(
-						operator14(
-							operator13(
-								operator12(
-									operator11(
-										operator10(
-											operator9(
-												operator8(
-													operator7(
-														operator6(
-															operator5(
-																operator4(
-																	operator3(
-																		operator2(
-																			operator1(source),
-																		),
-																	),
-																),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe20 is a typesafe 🎉 implementation of Pipe, that takes a source and 20 operators.
@@ -794,45 +447,8 @@ func Pipe20[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U any](
 	operator19 func(Observable[S]) Observable[T],
 	operator20 func(Observable[T]) Observable[U],
 ) Observable[U] {
-	return operator20(
-		operator19(
-			operator18(
-				operator17(
-					operator16(
-						operator15(
-							operator14(
-								operator13(
-									operator12(
-										operator11(
-											operator10(
-												operator9(
-													operator8(
-														operator7(
-															operator6(
-																operator5(
-																	operator4(
-																		operator3(
-																			operator2(
-																				operator1(source),
-																			),
-																		),
-																	),
-																),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe21 is a typesafe 🎉 implementation of Pipe, that takes a source and 21 operators.
@@ -862,47 +478,8 @@ func Pipe21[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V any
 	operator20 func(Observable[T]) Observable[U],
 	operator21 func(Observable[U]) Observable[V],
 ) Observable[V] {
-	return operator21(
-		operator20(
-			operator19(
-				operator18(
-					operator17(
-						operator16(
-							operator15(
-								operator14(
-									operator13(
-										operator12(
-											operator11(
-												operator10(
-													operator9(
-														operator8(
-															operator7(
-																operator6(
-																	operator5(
-																		operator4(
-																			operator3(
-																				operator2(
-																					operator1(source),
-																				),
-																			),
-																		),
-																	),
-																),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe22 is a typesafe 🎉 implementation of Pipe, that takes a source and 22 operators.
@@ -933,49 +510,8 @@ func Pipe22[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W 
 	operator21 func(Observable[U]) Observable[V],
 	operator22 func(Observable[V]) Observable[W],
 ) Observable[W] {
-	return operator22(
-		operator21(
-			operator20(
-				operator19(
-					operator18(
-						operator17(
-							operator16(
-								operator15(
-									operator14(
-										operator13(
-											operator12(
-												operator11(
-													operator10(
-														operator9(
-															operator8(
-																operator7(
-																	operator6(
-																		operator5(
-																			operator4(
-																				operator3(
-																					operator2(
-																						operator1(source),
-																					),
-																				),
-																			),
-																		),
-																	),
-																),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe23 is a typesafe 🎉 implementation of Pipe, that takes a source and 23 operators.
@@ -1007,51 +543,8 @@ func Pipe23[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W,
 	operator22 func(Observable[V]) Observable[W],
 	operator23 func(Observable[W]) Observable[X],
 ) Observable[X] {
-	return operator23(
-		operator22(
-			operator21(
-				operator20(
-					operator19(
-						operator18(
-							operator17(
-								operator16(
-									operator15(
-										operator14(
-											operator13(
-												operator12(
-													operator11(
-														operator10(
-															operator9(
-																operator8(
-																	operator7(
-																		operator6(
-																			operator5(
-																				operator4(
-																					operator3(
-																						operator2(
-																							operator1(source),
-																						),
-																					),
-																				),
-																			),
-																		),
-																	),
-																),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe24 is a typesafe 🎉 implementation of Pipe, that takes a source and 24 operators.
@@ -1084,53 +577,8 @@ func Pipe24[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W,
 	operator23 func(Observable[W]) Observable[X],
 	operator24 func(Observable[X]) Observable[Y],
 ) Observable[Y] {
-	return operator24(
-		operator23(
-			operator22(
-				operator21(
-					operator20(
-						operator19(
-							operator18(
-								operator17(
-									operator16(
-										operator15(
-											operator14(
-												operator13(
-													operator12(
-														operator11(
-															operator10(
-																operator9(
-																	operator8(
-																		operator7(
-																			operator6(
-																				operator5(
-																					operator4(
-																						operator3(
-																							operator2(
-																								operator1(source),
-																							),
-																						),
-																					),
-																				),
-																			),
-																		),
-																	),
-																),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Pipe25 is a typesafe 🎉 implementation of Pipe, that takes a source and 25 operators.
@@ -1164,74 +612,22 @@ func Pipe25[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W,
 	operator24 func(Observable[X]) Observable[Y],
 	operator25 func(Observable[Y]) Observable[Z],
 ) Observable[Z] {
-	return operator25(
-		operator24(
-			operator23(
-				operator22(
-					operator21(
-						operator20(
-							operator19(
-								operator18(
-									operator17(
-										operator16(
-											operator15(
-												operator14(
-													operator13(
-														operator12(
-															operator11(
-																operator10(
-																	operator9(
-																		operator8(
-																			operator7(
-																				operator6(
-																					operator5(
-																						operator4(
-																							operator3(
-																								operator2(
-																									operator1(source),
-																								),
-																							),
-																						),
-																					),
-																				),
-																			),
-																		),
-																	),
-																),
-															),
-														),
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-		),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp is similar to Pipe, but can be used as an operator.
 func PipeOp[First, Last any](operators ...any) func(Observable[First]) Observable[Last] {
-	return func(source Observable[First]) Observable[Last] {
-		return Pipe[First, Last](source, operators...)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp1 is similar to Pipe1, but can be used as an operator.
 func PipeOp1[A, B any](
 	operator1 func(Observable[A]) Observable[B],
 ) func(Observable[A]) Observable[B] {
-	return func(source Observable[A]) Observable[B] {
-		return Pipe1(
-			source,
-			operator1,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp2 is similar to Pipe2, but can be used as an operator.
@@ -1239,13 +635,8 @@ func PipeOp2[A, B, C any](
 	operator1 func(Observable[A]) Observable[B],
 	operator2 func(Observable[B]) Observable[C],
 ) func(Observable[A]) Observable[C] {
-	return func(source Observable[A]) Observable[C] {
-		return Pipe2(
-			source,
-			operator1,
-			operator2,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp3 is similar to Pipe3, but can be used as an operator.
@@ -1254,14 +645,8 @@ func PipeOp3[A, B, C, D any](
 	operator2 func(Observable[B]) Observable[C],
 	operator3 func(Observable[C]) Observable[D],
 ) func(Observable[A]) Observable[D] {
-	return func(source Observable[A]) Observable[D] {
-		return Pipe3(
-			source,
-			operator1,
-			operator2,
-			operator3,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp4 is similar to Pipe4, but can be used as an operator.
@@ -1271,15 +656,8 @@ func PipeOp4[A, B, C, D, E any](
 	operator3 func(Observable[C]) Observable[D],
 	operator4 func(Observable[D]) Observable[E],
 ) func(Observable[A]) Observable[E] {
-	return func(source Observable[A]) Observable[E] {
-		return Pipe4(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp5 is similar to Pipe5, but can be used as an operator.
@@ -1290,16 +668,8 @@ func PipeOp5[A, B, C, D, E, F any](
 	operator4 func(Observable[D]) Observable[E],
 	operator5 func(Observable[E]) Observable[F],
 ) func(Observable[A]) Observable[F] {
-	return func(source Observable[A]) Observable[F] {
-		return Pipe5(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp6 is similar to Pipe6, but can be used as an operator.
@@ -1311,17 +681,8 @@ func PipeOp6[A, B, C, D, E, F, G any](
 	operator5 func(Observable[E]) Observable[F],
 	operator6 func(Observable[F]) Observable[G],
 ) func(Observable[A]) Observable[G] {
-	return func(source Observable[A]) Observable[G] {
-		return Pipe6(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp7 is similar to Pipe7, but can be used as an operator.
@@ -1334,18 +695,8 @@ func PipeOp7[A, B, C, D, E, F, G, H any](
 	operator6 func(Observable[F]) Observable[G],
 	operator7 func(Observable[G]) Observable[H],
 ) func(Observable[A]) Observable[H] {
-	return func(source Observable[A]) Observable[H] {
-		return Pipe7(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp8 is similar to Pipe8, but can be used as an operator.
@@ -1359,19 +710,8 @@ func PipeOp8[A, B, C, D, E, F, G, H, I any](
 	operator7 func(Observable[G]) Observable[H],
 	operator8 func(Observable[H]) Observable[I],
 ) func(Observable[A]) Observable[I] {
-	return func(source Observable[A]) Observable[I] {
-		return Pipe8(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp9 is similar to Pipe9, but can be used as an operator.
@@ -1386,20 +726,8 @@ func PipeOp9[A, B, C, D, E, F, G, H, I, J any](
 	operator8 func(Observable[H]) Observable[I],
 	operator9 func(Observable[I]) Observable[J],
 ) func(Observable[A]) Observable[J] {
-	return func(source Observable[A]) Observable[J] {
-		return Pipe9(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp10 is similar to Pipe10, but can be used as an operator.
@@ -1415,21 +743,8 @@ func PipeOp10[A, B, C, D, E, F, G, H, I, J, K any](
 	operator9 func(Observable[I]) Observable[J],
 	operator10 func(Observable[J]) Observable[K],
 ) func(Observable[A]) Observable[K] {
-	return func(source Observable[A]) Observable[K] {
-		return Pipe10(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp11 is similar to Pipe11, but can be used as an operator.
@@ -1446,22 +761,8 @@ func PipeOp11[A, B, C, D, E, F, G, H, I, J, K, L any](
 	operator10 func(Observable[J]) Observable[K],
 	operator11 func(Observable[K]) Observable[L],
 ) func(Observable[A]) Observable[L] {
-	return func(source Observable[A]) Observable[L] {
-		return Pipe11(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp12 is similar to Pipe12, but can be used as an operator.
@@ -1479,23 +780,8 @@ func PipeOp12[A, B, C, D, E, F, G, H, I, J, K, L, M any](
 	operator11 func(Observable[K]) Observable[L],
 	operator12 func(Observable[L]) Observable[M],
 ) func(Observable[A]) Observable[M] {
-	return func(source Observable[A]) Observable[M] {
-		return Pipe12(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp13 is similar to Pipe13, but can be used as an operator.
@@ -1514,24 +800,8 @@ func PipeOp13[A, B, C, D, E, F, G, H, I, J, K, L, M, N any](
 	operator12 func(Observable[L]) Observable[M],
 	operator13 func(Observable[M]) Observable[N],
 ) func(Observable[A]) Observable[N] {
-	return func(source Observable[A]) Observable[N] {
-		return Pipe13(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp14 is similar to Pipe14, but can be used as an operator.
@@ -1551,25 +821,8 @@ func PipeOp14[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O any](
 	operator13 func(Observable[M]) Observable[N],
 	operator14 func(Observable[N]) Observable[O],
 ) func(Observable[A]) Observable[O] {
-	return func(source Observable[A]) Observable[O] {
-		return Pipe14(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp15 is similar to Pipe15, but can be used as an operator.
@@ -1590,26 +843,8 @@ func PipeOp15[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P any](
 	operator14 func(Observable[N]) Observable[O],
 	operator15 func(Observable[O]) Observable[P],
 ) func(Observable[A]) Observable[P] {
-	return func(source Observable[A]) Observable[P] {
-		return Pipe15(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp16 is similar to Pipe16, but can be used as an operator.
@@ -1631,27 +866,8 @@ func PipeOp16[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q any](
 	operator15 func(Observable[O]) Observable[P],
 	operator16 func(Observable[P]) Observable[Q],
 ) func(Observable[A]) Observable[Q] {
-	return func(source Observable[A]) Observable[Q] {
-		return Pipe16(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp17 is similar to Pipe17, but can be used as an operator.
@@ -1674,28 +890,8 @@ func PipeOp17[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R any](
 	operator16 func(Observable[P]) Observable[Q],
 	operator17 func(Observable[Q]) Observable[R],
 ) func(Observable[A]) Observable[R] {
-	return func(source Observable[A]) Observable[R] {
-		return Pipe17(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-			operator17,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp18 is similar to Pipe18, but can be used as an operator.
@@ -1719,29 +915,8 @@ func PipeOp18[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S any](
 	operator17 func(Observable[Q]) Observable[R],
 	operator18 func(Observable[R]) Observable[S],
 ) func(Observable[A]) Observable[S] {
-	return func(source Observable[A]) Observable[S] {
-		return Pipe18(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-			operator17,
-			operator18,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp19 is similar to Pipe19, but can be used as an operator.
@@ -1766,30 +941,8 @@ func PipeOp19[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T any](
 	operator18 func(Observable[R]) Observable[S],
 	operator19 func(Observable[S]) Observable[T],
 ) func(Observable[A]) Observable[T] {
-	return func(source Observable[A]) Observable[T] {
-		return Pipe19(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-			operator17,
-			operator18,
-			operator19,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp20 is similar to Pipe20, but can be used as an operator.
@@ -1815,31 +968,8 @@ func PipeOp20[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U any]
 	operator19 func(Observable[S]) Observable[T],
 	operator20 func(Observable[T]) Observable[U],
 ) func(Observable[A]) Observable[U] {
-	return func(source Observable[A]) Observable[U] {
-		return Pipe20(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-			operator17,
-			operator18,
-			operator19,
-			operator20,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp21 is similar to Pipe21, but can be used as an operator.
@@ -1866,32 +996,8 @@ func PipeOp21[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V a
 	operator20 func(Observable[T]) Observable[U],
 	operator21 func(Observable[U]) Observable[V],
 ) func(Observable[A]) Observable[V] {
-	return func(source Observable[A]) Observable[V] {
-		return Pipe21(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-			operator17,
-			operator18,
-			operator19,
-			operator20,
-			operator21,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp22 is similar to Pipe22, but can be used as an operator.
@@ -1919,33 +1025,8 @@ func PipeOp22[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, 
 	operator21 func(Observable[U]) Observable[V],
 	operator22 func(Observable[V]) Observable[W],
 ) func(Observable[A]) Observable[W] {
-	return func(source Observable[A]) Observable[W] {
-		return Pipe22(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-			operator17,
-			operator18,
-			operator19,
-			operator20,
-			operator21,
-			operator22,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp23 is similar to Pipe23, but can be used as an operator.
@@ -1974,34 +1055,8 @@ func PipeOp23[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, 
 	operator22 func(Observable[V]) Observable[W],
 	operator23 func(Observable[W]) Observable[X],
 ) func(Observable[A]) Observable[X] {
-	return func(source Observable[A]) Observable[X] {
-		return Pipe23(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-			operator17,
-			operator18,
-			operator19,
-			operator20,
-			operator21,
-			operator22,
-			operator23,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp24 is similar to Pipe24, but can be used as an operator.
@@ -2031,35 +1086,8 @@ func PipeOp24[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, 
 	operator23 func(Observable[W]) Observable[X],
 	operator24 func(Observable[X]) Observable[Y],
 ) func(Observable[A]) Observable[Y] {
-	return func(source Observable[A]) Observable[Y] {
-		return Pipe24(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-			operator17,
-			operator18,
-			operator19,
-			operator20,
-			operator21,
-			operator22,
-			operator23,
-			operator24,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PipeOp25 is similar to Pipe25, but can be used as an operator.
@@ -2090,34 +1118,6 @@ func PipeOp25[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, 
 	operator24 func(Observable[X]) Observable[Y],
 	operator25 func(Observable[Y]) Observable[Z],
 ) func(Observable[A]) Observable[Z] {
-	return func(source Observable[A]) Observable[Z] {
-		return Pipe25(
-			source,
-			operator1,
-			operator2,
-			operator3,
-			operator4,
-			operator5,
-			operator6,
-			operator7,
-			operator8,
-			operator9,
-			operator10,
-			operator11,
-			operator12,
-			operator13,
-			operator14,
-			operator15,
-			operator16,
-			operator17,
-			operator18,
-			operator19,
-			operator20,
-			operator21,
-			operator22,
-			operator23,
-			operator24,
-			operator25,
-		)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

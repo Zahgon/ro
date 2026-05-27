@@ -31,9 +31,7 @@ var startTime = time.Now()
 
 // NowNanoMonotonic returns the current time in nanoseconds.
 // It is approximately 3 times faster than time.Now() for high-frequency operations.
-func NowNanoMonotonic() int64 {
-	return time.Since(startTime).Nanoseconds()
-}
+func NowNanoMonotonic() int64 { _ = "STUB: not implemented"; return 0 }
 
 // //go:linkname nanotime runtime.nanotime
 // func nanotime() int64

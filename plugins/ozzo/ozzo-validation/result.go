@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package roozzovalidation
 
 // Monad for validation results, inspired by github.com/samber/mo.Result
@@ -22,49 +21,18 @@ type Result[T any] struct {
 	err   error
 }
 
-func (r Result[T]) Unwrap() T {
-	return r.value
-}
+func (r Result[T]) Unwrap() T { _ = "STUB: not implemented"; return *new(T) }
 
-func (r Result[T]) UnwrapOr(defaultValue T) T {
-	if r.err != nil {
-		return defaultValue
-	}
-	return r.value
-}
+func (r Result[T]) UnwrapOr(defaultValue T) T { _ = "STUB: not implemented"; return *new(T) }
 
-func (r Result[T]) IsOk() bool {
-	return !r.isErr
-}
+func (r Result[T]) IsOk() bool { _ = "STUB: not implemented"; return false }
 
-func (r Result[T]) IsError() bool {
-	return r.isErr
-}
+func (r Result[T]) IsError() bool { _ = "STUB: not implemented"; return false }
 
-func (r Result[T]) Error() error {
-	return r.err
-}
+func (r Result[T]) Error() error { _ = "STUB: not implemented"; return nil }
 
-func (r Result[T]) Get() (T, error) {
-	if r.isErr {
-		var t T
-		return t, r.err
-	}
+func (r Result[T]) Get() (T, error) { _ = "STUB: not implemented"; return *new(T), nil }
 
-	return r.value, nil
-}
+func Ok[T any](value T) Result[T] { _ = "STUB: not implemented"; return nil }
 
-func Ok[T any](value T) Result[T] {
-	return Result[T]{
-		isErr: false,
-		value: value,
-		err:   nil,
-	}
-}
-
-func Err[T any](err error) Result[T] {
-	return Result[T]{
-		isErr: true,
-		err:   err,
-	}
-}
+func Err[T any](err error) Result[T] { _ = "STUB: not implemented"; return nil }

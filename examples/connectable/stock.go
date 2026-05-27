@@ -12,14 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package main
-
-import (
-	"encoding/json"
-	"io"
-	"net/http"
-)
 
 // {
 // 	"Meta Data": {
@@ -68,35 +61,9 @@ type stock struct {
 }
 
 func getMSFTStock() (map[string]map[string]string, error) {
+	_ = "STUB: not implemented"
 	// send http request
-
-	url := "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=MSFT&apikey=demo"
-	method := "GET"
-
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	// parse json response
-	var result stock
-
-	err = json.Unmarshal(body, &result)
-	if err != nil {
-		return nil, err
-	}
-
-	return result.TS, nil
+	return nil, nil
 }
+
+// parse json response

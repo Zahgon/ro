@@ -15,9 +15,6 @@
 package rosort
 
 import (
-	"context"
-	"sort"
-
 	"github.com/samber/ro"
 	"github.com/samber/ro/internal/constraints"
 )
@@ -39,74 +36,20 @@ import (
 // Sort sorts the observable values using the provided comparison function.
 // Play: https://go.dev/play/p/3hL6m9jK5nV
 func Sort[T constraints.Ordered](cmp func(a, b T) int) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		return ro.NewObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			values, ctx, err := ro.CollectWithContext(subscriberCtx, source)
-			if err != nil {
-				destination.ErrorWithContext(ctx, err)
-				return nil
-			}
-
-			sort.Slice(values, func(i, j int) bool {
-				return cmp(values[i], values[j]) < 0
-			})
-
-			for _, value := range values {
-				destination.NextWithContext(ctx, value)
-			}
-			destination.CompleteWithContext(ctx)
-
-			return nil
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SortFunc sorts the observable values using the provided comparison function.
 // Play: https://go.dev/play/p/PzNTA9Vufy7
 func SortFunc[T comparable](cmp func(a, b T) int) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		return ro.NewObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			values, ctx, err := ro.CollectWithContext(subscriberCtx, source)
-			if err != nil {
-				destination.ErrorWithContext(ctx, err)
-				return nil
-			}
-
-			sort.Slice(values, func(i, j int) bool {
-				return cmp(values[i], values[j]) < 0
-			})
-
-			for _, value := range values {
-				destination.NextWithContext(ctx, value)
-			}
-			destination.CompleteWithContext(ctx)
-
-			return nil
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SortStableFunc sorts the observable values using the provided stable comparison function.
 // Play: https://go.dev/play/p/6b1tIxX9gfO
 func SortStableFunc[T comparable](cmp func(a, b T) int) func(ro.Observable[T]) ro.Observable[T] {
-	return func(source ro.Observable[T]) ro.Observable[T] {
-		return ro.NewObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[T]) ro.Teardown {
-			values, ctx, err := ro.CollectWithContext(subscriberCtx, source)
-			if err != nil {
-				destination.ErrorWithContext(ctx, err)
-				return nil
-			}
-
-			sort.Slice(values, func(i, j int) bool {
-				return cmp(values[i], values[j]) < 0
-			})
-
-			for _, value := range values {
-				destination.NextWithContext(ctx, value)
-			}
-			destination.CompleteWithContext(ctx)
-
-			return nil
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package main
 
 import (
@@ -21,7 +20,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/samber/lo"
 	"github.com/samber/ro"
 	rocsv "github.com/samber/ro/plugins/encoding/csv"
 )
@@ -44,13 +42,7 @@ var mockUsers = []User{
 	{ID: "10", Name: "Jack"},
 }
 
-func getUsers(index int64) ([]User, error) {
-	const batchSize = 5
-
-	offset := batchSize * index
-	end := batchSize*index + batchSize
-	return lo.Slice(mockUsers, int(offset), int(end)), nil
-}
+func getUsers(index int64) ([]User, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // Define a pipeline to query users from a database and write them to stdout as csv.
 var pipeline = ro.Pipe7(

@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package main
 
 import (
-	"time"
-
 	"github.com/samber/lo"
 	"github.com/samber/ro"
 )
@@ -29,21 +26,21 @@ type result struct {
 }
 
 func getOrders() ([]string, error) {
+	_ = "STUB: not implemented"
 	// simulate a microservice request
-	time.Sleep(1 * time.Second)
-	return []string{"order-1", "order-2"}, nil
+	return nil, nil
 }
 
 func getPaymentHistory() ([]string, error) {
+	_ = "STUB: not implemented"
 	// simulate a microservice request
-	time.Sleep(100 * time.Millisecond)
-	return []string{"payment-1", "payment-2"}, nil
+	return nil, nil
 }
 
 func getUserPreferences() (map[string]any, error) {
+	_ = "STUB: not implemented"
 	// simulate a microservice request
-	time.Sleep(10 * time.Millisecond)
-	return map[string]any{"role": "user"}, nil
+	return nil, nil
 }
 
 // Wait for all requests to complete and combine the results.

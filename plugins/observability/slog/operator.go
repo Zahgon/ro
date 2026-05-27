@@ -12,41 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rolog
 
 import (
-	"context"
-	"fmt"
 	"log/slog"
 
 	"github.com/samber/ro"
 )
 
 func Log[T any](logger slog.Logger, level slog.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			logger.Log(ctx, level, fmt.Sprintf("ro.Next: %v", value))
-		},
-		func(ctx context.Context, err error) {
-			logger.Log(ctx, level, fmt.Sprintf("ro.Error: %s", err.Error()))
-		},
-		func(ctx context.Context) {
-			logger.Log(ctx, level, "ro.Complete")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func LogWithNotification[T any](logger slog.Logger, level slog.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			logger.LogAttrs(ctx, level, "ro.Next", slog.Any("value", value))
-		},
-		func(ctx context.Context, err error) {
-			logger.LogAttrs(ctx, level, "ro.Error", slog.Any("error", err))
-		},
-		func(ctx context.Context) {
-			logger.LogAttrs(ctx, level, "ro.Complete")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

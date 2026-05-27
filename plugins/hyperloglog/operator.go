@@ -12,71 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rohyperloglog
 
 import (
-	"context"
 	"fmt"
 
-	"github.com/axiomhq/hyperloglog"
 	"github.com/samber/ro"
 )
 
 var ErrInvalidPrecision = fmt.Errorf("rohyperloglog.CountDistinct: precision has to be >= 4 and <= 18")
 
 func CountDistinct[T comparable](precision uint8, sparse bool, hashFunc func(input T) uint64) func(ro.Observable[T]) ro.Observable[uint64] {
-	if precision < 4 || precision > 18 {
-		panic(ErrInvalidPrecision)
-	}
-
-	return func(source ro.Observable[T]) ro.Observable[uint64] {
-		return ro.NewObservableWithContext[uint64](func(subscriberCtx context.Context, destination ro.Observer[uint64]) ro.Teardown {
-			// the error is handled above
-			sketch, _ := hyperloglog.NewSketch(precision, sparse)
-
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						sketch.InsertHash(hashFunc(value))
-					},
-					destination.ErrorWithContext,
-					func(ctx context.Context) {
-						destination.NextWithContext(ctx, sketch.Estimate())
-						destination.CompleteWithContext(ctx)
-					},
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// the error is handled above
 
 func CountDistinctReduce[T comparable](precision uint8, sparse bool, hashFunc func(input T) uint64) func(ro.Observable[T]) ro.Observable[uint64] {
-	if precision < 4 || precision > 18 {
-		panic(ErrInvalidPrecision)
-	}
-
-	return func(source ro.Observable[T]) ro.Observable[uint64] {
-		return ro.NewObservableWithContext[uint64](func(subscriberCtx context.Context, destination ro.Observer[uint64]) ro.Teardown {
-			// the error is handled above
-			sketch, _ := hyperloglog.NewSketch(precision, sparse)
-
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value T) {
-						sketch.InsertHash(hashFunc(value))
-						destination.NextWithContext(ctx, sketch.Estimate())
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// the error is handled above

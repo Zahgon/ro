@@ -15,35 +15,14 @@
 package ro
 
 import (
-	"context"
 	"errors"
-	"fmt"
 	"time"
-
-	"github.com/samber/lo"
 )
 
 // @TODO: custom error type ?
-func recoverValueToError(e any) error {
-	if err, ok := e.(error); ok {
-		return err
-	}
+func recoverValueToError(e any) error { _ = "STUB: not implemented"; return nil }
 
-	return fmt.Errorf("unexpected error: %v", e)
-}
-
-func recoverUnhandledError(cb func()) {
-	lo.TryCatchWithErrorValue(
-		func() error {
-			cb()
-			return nil
-		},
-		func(e any) {
-			err := recoverValueToError(e)
-			OnUnhandledError(context.TODO(), err)
-		},
-	)
-}
+func recoverUnhandledError(cb func()) { _ = "STUB: not implemented"; return }
 
 var (
 	//nolint:revive
@@ -77,107 +56,56 @@ var (
 	ErrConnectableObservableMissingConnectorFactory = errors.New("ro.ConnectableObservable: missing connector factory")
 )
 
-func newUnsubscriptionError(err error) error {
-	return &unsubscriptionError{
-		err: err,
-	}
-}
+func newUnsubscriptionError(err error) error { _ = "STUB: not implemented"; return nil }
 
 type unsubscriptionError struct {
 	err error
 }
 
-func (e *unsubscriptionError) Error() string {
-	return "ro.Subscription: " + e.err.Error()
-}
+func (e *unsubscriptionError) Error() string { _ = "STUB: not implemented"; return "" }
 
-func (e *unsubscriptionError) Unwrap() error {
-	return e.err
-}
+func (e *unsubscriptionError) Unwrap() error { _ = "STUB: not implemented"; return nil }
 
-func newObservableError(err error) error {
-	return &observableError{
-		err: err,
-	}
-}
+func newObservableError(err error) error { _ = "STUB: not implemented"; return nil }
 
 type observableError struct {
 	err error
 }
 
-func (e *observableError) Error() string {
-	return "ro.Observable: " + e.err.Error()
-}
+func (e *observableError) Error() string { _ = "STUB: not implemented"; return "" }
 
-func (e *observableError) Unwrap() error {
-	return e.err
-}
+func (e *observableError) Unwrap() error { _ = "STUB: not implemented"; return nil }
 
-func newObserverError(err error) error {
-	return &observerError{
-		err: err,
-	}
-}
+func newObserverError(err error) error { _ = "STUB: not implemented"; return nil }
 
 type observerError struct {
 	err error
 }
 
-func (e *observerError) Error() string {
-	err := "<nil>"
-	if e.err != nil {
-		err = e.err.Error()
-	}
+func (e *observerError) Error() string { _ = "STUB: not implemented"; return "" }
 
-	return "ro.Observer: " + err
-}
+func (e *observerError) Unwrap() error { _ = "STUB: not implemented"; return nil }
 
-func (e *observerError) Unwrap() error {
-	return e.err
-}
-
-func newTimeoutError(duration time.Duration) error {
-	return &timeoutError{
-		duration: duration,
-	}
-}
+func newTimeoutError(duration time.Duration) error { _ = "STUB: not implemented"; return nil }
 
 type timeoutError struct {
 	duration time.Duration
 }
 
-func (e *timeoutError) Error() string {
-	return "ro.Timeout: timeout after " + e.duration.String()
-}
+func (e *timeoutError) Error() string { _ = "STUB: not implemented"; return "" }
 
-func newCastError[T, U any]() error {
-	return &castError[T, U]{}
-}
+func newCastError[T, U any]() error { _ = "STUB: not implemented"; return nil }
 
 type castError[T any, U any] struct{}
 
-func (e *castError[T, U]) Error() string {
-	var t T
+func (e *castError[T, U]) Error() string { _ = "STUB: not implemented"; return "" }
 
-	var u U
-
-	return fmt.Sprintf("ro.Cast: unable to cast %T to %T", t, u)
-}
-
-func newPipeError(msg string, args ...any) error {
-	return &pipeError{
-		err: fmt.Errorf(msg, args...),
-	}
-}
+func newPipeError(msg string, args ...any) error { _ = "STUB: not implemented"; return nil }
 
 type pipeError struct {
 	err error
 }
 
-func (e *pipeError) Error() string {
-	return "ro.Pipe: " + e.err.Error()
-}
+func (e *pipeError) Error() string { _ = "STUB: not implemented"; return "" }
 
-func (e *pipeError) Unwrap() error {
-	return e.err
-}
+func (e *pipeError) Unwrap() error { _ = "STUB: not implemented"; return nil }

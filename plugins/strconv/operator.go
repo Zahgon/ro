@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rostrconv
 
 import (
-	"strconv"
-
 	"github.com/samber/ro"
 )
 
@@ -28,11 +25,11 @@ import (
 //
 //	ro.Pipe(ro.FromSlice([]string{"123", "456", "789"}), rostrconv.Atoi[string]()).
 //	  Subscribe(ro.NewObserver[int](...))
+//
 // Play: https://go.dev/play/p/5hL9m8jK3nQ
 func Atoi[T ~string]() func(ro.Observable[T]) ro.Observable[int] {
-	return ro.MapErr(func(v T) (int, error) {
-		return strconv.Atoi(string(v))
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ParseInt converts strings to int64 values with specified base and bit size.
@@ -44,11 +41,11 @@ func Atoi[T ~string]() func(ro.Observable[T]) ro.Observable[int] {
 //
 //	ro.Pipe(ro.FromSlice([]string{"123", "FF", "1010"}), rostrconv.ParseInt[string](16, 64)). // Parse as hex, 64-bit
 //	  Subscribe(ro.NewObserver[int64](...))
+//
 // Play: https://go.dev/play/p/CqjCmQVAPXC
 func ParseInt[T ~string](base int, bitSize int) func(ro.Observable[T]) ro.Observable[int64] {
-	return ro.MapErr(func(v T) (int64, error) {
-		return strconv.ParseInt(string(v), base, bitSize)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ParseFloat converts strings to float64 values with specified bit size.
@@ -59,11 +56,11 @@ func ParseInt[T ~string](base int, bitSize int) func(ro.Observable[T]) ro.Observ
 //
 //	ro.Pipe(ro.FromSlice([]string{"3.14", "2.718", "1.414"}), rostrconv.ParseFloat[string](64)). // Parse as 64-bit float
 //	  Subscribe(ro.NewObserver[float64](...))
+//
 // Play: https://go.dev/play/p/g-YvtjXtX7V
 func ParseFloat[T ~string](bitSize int) func(ro.Observable[T]) ro.Observable[float64] {
-	return ro.MapErr(func(v T) (float64, error) {
-		return strconv.ParseFloat(string(v), bitSize)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ParseBool converts strings to boolean values using strconv.ParseBool.
@@ -75,11 +72,11 @@ func ParseFloat[T ~string](bitSize int) func(ro.Observable[T]) ro.Observable[flo
 //
 //	ro.Pipe(ro.FromSlice([]string{"true", "false", "1", "0"}), rostrconv.ParseBool[string]()).
 //	  Subscribe(ro.NewObserver[bool](...))
+//
 // Play: https://go.dev/play/p/2C5fkrRLyW_g
 func ParseBool[T ~string]() func(ro.Observable[T]) ro.Observable[bool] {
-	return ro.MapErr(func(v T) (bool, error) {
-		return strconv.ParseBool(string(v))
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ParseUint converts strings to uint64 values with specified base and bit size.
@@ -92,9 +89,8 @@ func ParseBool[T ~string]() func(ro.Observable[T]) ro.Observable[bool] {
 //	ro.Pipe(ro.FromSlice([]string{"123", "FF", "1010"}), rostrconv.ParseUint[string](16, 64)). // Parse as hex, 64-bit unsigned
 //	  Subscribe(ro.NewObserver[uint64](...))
 func ParseUint[T ~string](base int, bitSize int) func(ro.Observable[T]) ro.Observable[uint64] {
-	return ro.MapErr(func(v T) (uint64, error) {
-		return strconv.ParseUint(string(v), base, bitSize)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ParseUint64 is an alias for ParseUint that specifically returns uint64.
@@ -105,9 +101,8 @@ func ParseUint[T ~string](base int, bitSize int) func(ro.Observable[T]) ro.Obser
 //	ro.Pipe(ro.FromSlice([]string{"123", "456", "789"}), rostrconv.ParseUint64[string](10, 64)). // Parse as decimal, 64-bit unsigned
 //	  Subscribe(ro.NewObserver[uint64](...))
 func ParseUint64[T ~string](base int, bitSize int) func(ro.Observable[T]) ro.Observable[uint64] {
-	return ro.MapErr(func(v T) (uint64, error) {
-		return strconv.ParseUint(string(v), base, bitSize)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FormatBool converts boolean values to strings using strconv.FormatBool.
@@ -117,9 +112,11 @@ func ParseUint64[T ~string](base int, bitSize int) func(ro.Observable[T]) ro.Obs
 //
 //	ro.Pipe(ro.FromSlice([]bool{true, false, true}), rostrconv.FormatBool()).
 //	  Subscribe(ro.NewObserver[string](...))
+//
 // Play: https://go.dev/play/p/8vDdaQyzoi_b
 func FormatBool() func(ro.Observable[bool]) ro.Observable[string] {
-	return ro.Map(strconv.FormatBool)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FormatFloat converts float64 values to strings with specified format, precision, and bit size.
@@ -137,11 +134,11 @@ func FormatBool() func(ro.Observable[bool]) ro.Observable[string] {
 //
 //	ro.Pipe(ro.FromSlice([]float64{3.14159, 2.71828}), rostrconv.FormatFloat('f', 2, 64)). // Fixed-point, 2 decimal places
 //	  Subscribe(ro.NewObserver[string](...))
+//
 // Play: https://go.dev/play/p/GWSPE4Mp-uy
 func FormatFloat(mt byte, prec, bitSize int) func(ro.Observable[float64]) ro.Observable[string] {
-	return ro.Map(func(v float64) string {
-		return strconv.FormatFloat(v, mt, prec, bitSize)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FormatComplex converts complex128 values to strings with specified format, precision, and bit size.
@@ -158,11 +155,11 @@ func FormatFloat(mt byte, prec, bitSize int) func(ro.Observable[float64]) ro.Obs
 //
 //	ro.Pipe(ro.FromSlice([]complex128{3+4i, 1+2i}), rostrconv.FormatComplex('f', 2, 128)). // Fixed-point, 2 decimal places
 //	  Subscribe(ro.NewObserver[string](...))
+//
 // Play: https://go.dev/play/p/gbp_kl7XJWv
 func FormatComplex(mt byte, prec, bitSize int) func(ro.Observable[complex128]) ro.Observable[string] {
-	return ro.Map(func(v complex128) string {
-		return strconv.FormatComplex(v, mt, prec, bitSize)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FormatInt converts int64 values to strings with specified base.
@@ -172,11 +169,11 @@ func FormatComplex(mt byte, prec, bitSize int) func(ro.Observable[complex128]) r
 //
 //	ro.Pipe(ro.FromSlice([]int64{123, 456, 789}), rostrconv.FormatInt[string](16)). // Format as hexadecimal
 //	  Subscribe(ro.NewObserver[string](...))
+//
 // Play: https://go.dev/play/p/hUpBVHRJgXY
 func FormatInt[T ~string](base int) func(ro.Observable[int64]) ro.Observable[string] {
-	return ro.Map(func(v int64) string {
-		return strconv.FormatInt(v, base)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FormatUint converts uint64 values to strings with specified base.
@@ -186,11 +183,11 @@ func FormatInt[T ~string](base int) func(ro.Observable[int64]) ro.Observable[str
 //
 //	ro.Pipe(ro.FromSlice([]uint64{123, 456, 789}), rostrconv.FormatUint[string](16)). // Format as hexadecimal
 //	  Subscribe(ro.NewObserver[string](...))
+//
 // Play: https://go.dev/play/p/h4TYG9sFPZw
 func FormatUint[T ~string](base int) func(ro.Observable[uint64]) ro.Observable[string] {
-	return ro.Map(func(v uint64) string {
-		return strconv.FormatUint(v, base)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Itoa converts integers to strings using strconv.Itoa.
@@ -200,10 +197,9 @@ func FormatUint[T ~string](base int) func(ro.Observable[uint64]) ro.Observable[s
 //
 //	ro.Pipe(ro.FromSlice([]int{123, 456, 789}), rostrconv.Itoa()).
 //	  Subscribe(ro.NewObserver[string](...))
+//
 // Play: https://go.dev/play/p/6hN7k9jL4mR
-func Itoa() func(ro.Observable[int]) ro.Observable[string] {
-	return ro.Map(strconv.Itoa)
-}
+func Itoa() func(ro.Observable[int]) ro.Observable[string] { _ = "STUB: not implemented"; return nil }
 
 // Quote converts strings to Go string literals using strconv.Quote.
 // This adds double quotes and escapes special characters.
@@ -212,9 +208,11 @@ func Itoa() func(ro.Observable[int]) ro.Observable[string] {
 //
 //	ro.Pipe(ro.FromSlice([]string{"hello", "world\n", "test"}), rostrconv.Quote()).
 //	  Subscribe(ro.NewObserver[string](...))
+//
 // Play: https://go.dev/play/p/O72Y-oUwBxr
 func Quote() func(ro.Observable[string]) ro.Observable[string] {
-	return ro.Map(strconv.Quote)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // QuoteRune converts runes to Go character literals using strconv.QuoteRune.
@@ -224,9 +222,11 @@ func Quote() func(ro.Observable[string]) ro.Observable[string] {
 //
 //	ro.Pipe(ro.FromSlice([]rune{'a', 'b', 'c'}), rostrconv.QuoteRune()).
 //	  Subscribe(ro.NewObserver[string](...))
+//
 // Play: https://go.dev/play/p/tCnviYGuSMn
 func QuoteRune() func(ro.Observable[rune]) ro.Observable[string] {
-	return ro.Map(strconv.QuoteRune)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Unquote converts Go string literals back to strings using strconv.Unquote.
@@ -237,7 +237,9 @@ func QuoteRune() func(ro.Observable[rune]) ro.Observable[string] {
 //
 //	ro.Pipe(ro.FromSlice([]string{`"hello"`, `"world\n"`, `"test"`}), rostrconv.Unquote()).
 //	  Subscribe(ro.NewObserver[string](...))
+//
 // Play: https://go.dev/play/p/cMaHM-He8NT
 func Unquote() func(ro.Observable[string]) ro.Observable[string] {
-	return ro.MapErr(strconv.Unquote)
+	_ = "STUB: not implemented"
+	return nil
 }

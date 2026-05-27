@@ -15,25 +15,14 @@
 package rostrings
 
 import (
-	"strings"
-
 	"github.com/samber/ro"
 )
 
-func kebabCase(str string) string {
-	items := words(str)
-	for i := range items {
-		items[i] = strings.ToLower(items[i])
-	}
-	return strings.Join(items, "-")
-}
+func kebabCase(str string) string { _ = "STUB: not implemented"; return "" }
 
 // KebabCase converts the string to kebab case.
 // Play: https://go.dev/play/p/Ndj3Gy2lztd
 func KebabCase[T ~string]() func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(kebabCase(string(value)))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

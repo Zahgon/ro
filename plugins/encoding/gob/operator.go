@@ -12,33 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rogob
 
 import (
-	"bytes"
-	"encoding/gob"
-
 	"github.com/samber/ro"
 )
 
 // Encode encodes values to gob binary format.
 // Play: https://go.dev/play/p/HdU4DMTagoA
 func Encode[T any]() func(ro.Observable[T]) ro.Observable[[]byte] {
-	return ro.MapErr(func(v T) ([]byte, error) {
-		var writer bytes.Buffer
-		err := gob.NewEncoder(&writer).Encode(v)
-		return writer.Bytes(), err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Decode decodes gob binary data to values.
 // Play: https://go.dev/play/p/cH3AiWEwFQe
 func Decode[T any]() func(ro.Observable[[]byte]) ro.Observable[T] {
-	return ro.MapErr(func(v []byte) (T, error) {
-		var output T
-		buf := bytes.NewBuffer(v)
-		err := gob.NewDecoder(buf).Decode(&output)
-		return output, err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

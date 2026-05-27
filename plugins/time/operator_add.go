@@ -31,11 +31,8 @@ import (
 //
 // The observable then emits: time.Now().Add(2 * time.Hour).
 func Add(d time.Duration) func(destination ro.Observable[time.Time]) ro.Observable[time.Time] {
-	return ro.Map(
-		func(value time.Time) time.Time {
-			return value.Add(d)
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddDate returns an operator that adds a date offset (years, months, days) to each time value.
@@ -49,9 +46,6 @@ func Add(d time.Duration) func(destination ro.Observable[time.Time]) ro.Observab
 //
 // The observable then emits: time.Date(2026, time.February, 7, 14, 30, 0, 0, time.UTC).
 func AddDate(years int, months int, days int) func(destination ro.Observable[time.Time]) ro.Observable[time.Time] {
-	return ro.Map(
-		func(value time.Time) time.Time {
-			return value.AddDate(years, months, days)
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

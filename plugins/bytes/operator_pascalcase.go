@@ -15,25 +15,14 @@
 package robytes
 
 import (
-	"bytes"
-
 	"github.com/samber/ro"
 )
 
-func pascalCase(str []byte) []byte {
-	items := words(str)
-	for i := range items {
-		items[i] = capitalize(items[i])
-	}
-	return bytes.Join(items, []byte(""))
-}
+func pascalCase(str []byte) []byte { _ = "STUB: not implemented"; return nil }
 
 // PascalCase converts the string to pascal case.
 // Play: https://go.dev/play/p/pBULs9BPMVD
 func PascalCase[T ~[]byte]() func(destination ro.Observable[T]) ro.Observable[T] {
-	return ro.Map(
-		func(value T) T {
-			return T(pascalCase(value))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -34,6 +34,4 @@ type Subject[T any] interface {
 }
 
 // NewSubject is an alias to NewPublishSubject.
-func NewSubject[T any]() Subject[T] {
-	return NewPublishSubject[T]()
-}
+func NewSubject[T any]() Subject[T] { _ = "STUB: not implemented"; return nil }

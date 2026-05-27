@@ -28,12 +28,6 @@ type WebsocketObserverConfig[In any] struct {
 
 // NewWebsocketObserver creates a websocket observer that can send messages to a websocket endpoint.
 func NewWebsocketObserver[In any](config WebsocketObserverConfig[In]) ro.Observer[In] {
-	return NewWebsocketSubject(WebsocketSubjectConfig[In, struct{}]{
-		URL:             config.URL,
-		Headers:         config.Headers,
-		Serializer:      config.Serializer,
-		Deserializer:    func([]byte) (struct{}, error) { return struct{}{}, nil },
-		Dialer:          config.Dialer,
-		OutputConnector: ro.NewPublishSubject[struct{}],
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

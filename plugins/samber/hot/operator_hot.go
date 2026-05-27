@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rohot
 
 import (
-	"context"
 	"errors"
 
 	"github.com/samber/hot"
@@ -29,113 +27,27 @@ var NotFound = errors.New("rohot.GetOrFetchOrError: not found")
 // GetOrFetch creates an operator that retrieves values from cache or fetches them when missing.
 // Play: https://go.dev/play/p/7mKj3n8fH4b
 func GetOrFetch[K comparable, V any](cache *hot.HotCache[K, V]) func(ro.Observable[K]) ro.Observable[lo.Tuple2[V, bool]] {
-	return func(source ro.Observable[K]) ro.Observable[lo.Tuple2[V, bool]] {
-		return ro.NewObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[lo.Tuple2[V, bool]]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value K) {
-						v, ok, err := cache.Get(value)
-						if err != nil {
-							destination.ErrorWithContext(ctx, err)
-							return
-						}
-
-						destination.NextWithContext(ctx, lo.T2(v, ok))
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetOrFetchOrSkip creates an operator that retrieves cached values and skips missing ones.
 // Play: https://go.dev/play/p/2gN9k8fJ3bL
 func GetOrFetchOrSkip[K comparable, V any](cache *hot.HotCache[K, V]) func(ro.Observable[K]) ro.Observable[V] {
-	return func(source ro.Observable[K]) ro.Observable[V] {
-		return ro.NewObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[V]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value K) {
-						v, ok, err := cache.Get(value)
-						if err != nil {
-							destination.ErrorWithContext(ctx, err)
-							return
-						}
-
-						if ok {
-							destination.NextWithContext(ctx, v)
-						}
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetOrFetchOrError creates an operator that retrieves cached values or emits an error for missing ones.
 // Play: https://go.dev/play/p/9hJ7k6fL2mN
 func GetOrFetchOrError[K comparable, V any](cache *hot.HotCache[K, V]) func(ro.Observable[K]) ro.Observable[V] {
-	return func(source ro.Observable[K]) ro.Observable[V] {
-		return ro.NewObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[V]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value K) {
-						v, ok, err := cache.Get(value)
-						if err != nil {
-							destination.ErrorWithContext(ctx, err)
-							return
-						}
-
-						if ok {
-							destination.NextWithContext(ctx, v)
-						} else {
-							destination.ErrorWithContext(ctx, NotFound)
-						}
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetOrFetchMany creates an operator that retrieves multiple cached values at once.
 // Play: https://go.dev/play/p/4hK8n7fJ3mP
 func GetOrFetchMany[K comparable, V any](cache *hot.HotCache[K, V]) func(ro.Observable[[]K]) ro.Observable[map[K]V] {
-	return func(source ro.Observable[[]K]) ro.Observable[map[K]V] {
-		return ro.NewObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[map[K]V]) ro.Teardown {
-			sub := source.SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, values []K) {
-						v, _, err := cache.GetMany(values)
-						if err != nil {
-							destination.ErrorWithContext(ctx, err)
-							return
-						}
-
-						destination.NextWithContext(ctx, v)
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-			return sub.Unsubscribe
-		})
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -16,9 +16,5 @@
 
 package xrand
 
-import "math/rand"
-
 // Shuffle is a wrapper around rand.Shuffle that is only available in Go 1.22 and later.
-func Shuffle(n int, swap func(i, j int)) {
-	rand.Shuffle(n, swap)
-}
+func Shuffle(n int, swap func(i, j int)) { _ = "STUB: not implemented"; return }

@@ -26,60 +26,23 @@ package xerrors
 // between each string.
 //
 // A non-nil error returned by Join implements the Unwrap() []error method.
-func Join(errs ...error) error {
-	n := 0
-	for _, err := range errs {
-		if err != nil {
-			n++
-		}
-	}
-	if n == 0 {
-		return nil
-	}
-	if n == 1 {
-		for _, err := range errs {
-			if err != nil {
-				if _, ok := err.(interface { //nolint:staticcheck
-					Unwrap() []error
-				}); ok {
-					return err
-				}
-			}
-		}
-	}
+func Join(errs ...error) error { _ = "STUB: not implemented"; return nil }
 
-	e := &joinError{
-		errs: make([]error, 0, n),
-	}
-	for _, err := range errs {
-		if err != nil {
-			e.errs = append(e.errs, err)
-		}
-	}
-	return e
-}
+//nolint:staticcheck
 
 type joinError struct {
 	errs []error
 }
 
 func (e *joinError) Error() string {
+	_ = "STUB: not implemented"
 	// Since Join returns nil if every value in errs is nil,
 	// e.errs cannot be empty.
-	if len(e.errs) == 1 {
-		return e.errs[0].Error()
-	}
-
-	b := []byte(e.errs[0].Error())
-	for _, err := range e.errs[1:] {
-		b = append(b, '\n')
-		b = append(b, err.Error()...)
-	}
-	// At this point, b has at least one byte '\n'.
-	return string(b)
-	// return unsafe.String(&b[0], len(b))
+	return ""
 }
 
-func (e *joinError) Unwrap() []error {
-	return e.errs
-}
+// At this point, b has at least one byte '\n'.
+
+// return unsafe.String(&b[0], len(b))
+
+func (e *joinError) Unwrap() []error { _ = "STUB: not implemented"; return nil }

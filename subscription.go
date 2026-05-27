@@ -16,9 +16,6 @@ package ro
 
 import (
 	"sync"
-
-	"github.com/samber/lo"
-	"github.com/samber/ro/internal/xerrors"
 )
 
 // Teardown is a function that cleans up resources, such as closing
@@ -50,17 +47,11 @@ var _ Subscription = (*subscriptionImpl)(nil)
 // is added. When the subscription is already disposed, the `teardown` callback
 // is triggered immediately.
 func NewSubscription(teardown Teardown) Subscription {
-	teardowns := make([]func(), 0, 4) // Pre-allocate for common case
-	if teardown != nil {
-		teardowns = append(teardowns, teardown)
-	}
-
-	return &subscriptionImpl{
-		done:       false,
-		mu:         sync.Mutex{},
-		finalizers: teardowns,
-	}
+	_ = "STUB: not implemented"
+	return *new(Subscription)
 }
+
+// Pre-allocate for common case
 
 type subscriptionImpl struct {
 	done       bool
@@ -75,20 +66,9 @@ type subscriptionImpl struct {
 // This method is thread-safe.
 //
 // Implements Subscription.
-func (s *subscriptionImpl) Add(teardown Teardown) {
-	if teardown == nil {
-		return
-	}
+func (s *subscriptionImpl) Add(teardown Teardown) { _ = "STUB: not implemented"; return }
 
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	if s.done {
-		teardown() // not protected against panics
-	} else {
-		s.finalizers = append(s.finalizers, teardown)
-	}
-}
+// not protected against panics
 
 // AddUnsubscribable merges multiple subscriptions into one. The method does nothing
 // if `unsubscribable` is nil.
@@ -97,11 +77,8 @@ func (s *subscriptionImpl) Add(teardown Teardown) {
 //
 // Implements Subscription.
 func (s *subscriptionImpl) AddUnsubscribable(unsubscribable Unsubscribable) {
-	if unsubscribable == nil {
-		return
-	}
-
-	s.Add(unsubscribable.Unsubscribe)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Unsubscribe disposes the resources held by the subscription. May, for
@@ -111,54 +88,24 @@ func (s *subscriptionImpl) AddUnsubscribable(unsubscribable Unsubscribable) {
 // This method is thread-safe. Finalizers are executed in sequence.
 //
 // Implements Unsuscribable.
-func (s *subscriptionImpl) Unsubscribe() {
-	s.mu.Lock()
+func (s *subscriptionImpl) Unsubscribe() { _ = "STUB: not implemented"; return }
 
-	if s.done {
-		s.mu.Unlock()
-		return
-	}
+// Note: we prefer not running this in parallel.
 
-	s.done = true
+// protected against panics
 
-	if len(s.finalizers) == 0 {
-		s.mu.Unlock()
-		return
-	}
+// OnUnhandledError(err)
 
-	finalizers := s.finalizers
-	s.finalizers = make([]func(), 0)
-	s.mu.Unlock()
+// Error is triggered after the recursive call to finalizers
+// because we want to execute all finalizers before panicking.
 
-	var errs []error
-
-	// Note: we prefer not running this in parallel.
-	for i := range finalizers {
-		err := execFinalizer(finalizers[i]) // protected against panics
-		if err != nil {
-			// OnUnhandledError(err)
-			errs = append(errs, err)
-		}
-	}
-
-	// Error is triggered after the recursive call to finalizers
-	// because we want to execute all finalizers before panicking.
-	if len(errs) > 0 {
-		// errors.Join has been introduced in go 1.20
-		panic(xerrors.Join(errs...))
-	}
-}
+// errors.Join has been introduced in go 1.20
 
 // IsClosed returns true if the subscription has been disposed
 // or if unsubscription is in progress.
 //
 // Implements Subscription.
-func (s *subscriptionImpl) IsClosed() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	return s.done
-}
+func (s *subscriptionImpl) IsClosed() bool { _ = "STUB: not implemented"; return false }
 
 // Wait blocks until a `Subscription` is canceled. It can be used for
 // blocking until an `Observable` throws an error or completes.
@@ -169,36 +116,13 @@ func (s *subscriptionImpl) IsClosed() bool {
 // Note: using .Wait() is not recommended.
 //
 // Implements Subscription.
-func (s *subscriptionImpl) Wait() {
-	ch := make(chan struct{}, 1)
+func (s *subscriptionImpl) Wait() { _ = "STUB: not implemented"; return }
 
-	// There is no guarantee that this callback will be the last finalizer
-	// added to this subscription.
-	s.Add(func() {
-		ch <- struct{}{}
-	})
-
-	<-ch
-	close(ch)
-}
+// There is no guarantee that this callback will be the last finalizer
+// added to this subscription.
 
 // execFinalizer runs the finalizer and catches any panics, converting them to errors.
-func execFinalizer(finalizer func()) (err error) {
-	lo.TryCatchWithErrorValue(
-		func() error {
-			finalizer()
-
-			err = nil
-
-			return nil
-		},
-		func(e any) {
-			err = newUnsubscriptionError(recoverValueToError(e))
-		},
-	)
-
-	return err
-}
+func execFinalizer(finalizer func()) (err error) { _ = "STUB: not implemented"; return nil }
 
 // @TODO: Add methods Remove + RemoveSubscription.
 // Currently, Go does not support function address comparison, so we cannot

@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rocron
 
 import (
-	"context"
-	"sync/atomic"
 	"time"
 
 	"github.com/go-co-op/gocron/v2"
@@ -36,39 +33,8 @@ type ScheduleJob struct {
 //
 //	NewScheduler(gocron.CronJob("42 23 * * *"), false).Subscribe(...)
 func NewScheduler(job gocron.JobDefinition) ro.Observable[ScheduleJob] {
-	return ro.ThrowOnContextCancel[ScheduleJob]()(
-		ro.NewObservableWithContext(func(ctx context.Context, destination ro.Observer[ScheduleJob]) ro.Teardown {
-			counter := int64(-1)
-
-			s, err := gocron.NewScheduler()
-			if err != nil {
-				destination.ErrorWithContext(ctx, err)
-				return nil
-			}
-
-			_, err = s.NewJob(
-				job,
-				gocron.NewTask(
-					func() {
-						newValue := atomic.AddInt64(&counter, 1)
-						destination.NextWithContext(ctx, ScheduleJob{
-							Counter: int(newValue),
-							Time:    time.Now(),
-						})
-					},
-				),
-			)
-			if err != nil {
-				destination.ErrorWithContext(ctx, err)
-				return nil
-			}
-
-			// start the scheduler
-			s.Start()
-
-			return func() {
-				_ = s.Shutdown()
-			}
-		}),
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// start the scheduler

@@ -31,11 +31,8 @@ import (
 //
 // The observable then emits: time.Date(2026, time.January, 7, 14, 30, 0, 0, time.UTC).
 func Parse[T ~string](layout string) func(ro.Observable[T]) ro.Observable[time.Time] {
-	return ro.MapErr(
-		func(value T) (time.Time, error) {
-			return time.Parse(layout, string(value))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ParseInLocation returns an operator that parses time strings in the given location.
@@ -49,9 +46,6 @@ func Parse[T ~string](layout string) func(ro.Observable[T]) ro.Observable[time.T
 //
 // The observable then emits: time.Date(2026, time.January, 7, 14, 30, 0, 0, time.UTC).
 func ParseInLocation[T ~string](layout string, loc *time.Location) func(ro.Observable[T]) ro.Observable[time.Time] {
-	return ro.MapErr(
-		func(value T) (time.Time, error) {
-			return time.ParseInLocation(layout, string(value), loc)
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

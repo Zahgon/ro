@@ -15,25 +15,19 @@
 package rojsonv2
 
 import (
-	"encoding/json"
-
 	"github.com/samber/ro"
 )
 
 // Marshal encodes values to JSON format using encoding/json v2.
 // Play: https://go.dev/play/p/4far_YBL4I5
 func Marshal[T any]() func(ro.Observable[T]) ro.Observable[[]byte] {
-	return ro.MapErr(func(v T) ([]byte, error) {
-		return json.Marshal(v)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Unmarshal decodes JSON data to values using encoding/json v2.
 // Play: https://go.dev/play/p/4i6ol-5OVDP
 func Unmarshal[T any]() func(ro.Observable[[]byte]) ro.Observable[T] {
-	return ro.MapErr(func(v []byte) (T, error) {
-		var t T
-		err := json.Unmarshal(v, &t)
-		return t, err
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

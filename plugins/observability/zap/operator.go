@@ -12,50 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package rozap
 
 import (
-	"context"
-	"fmt"
-
 	"github.com/samber/ro"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 func Log[T any](logger *zap.Logger, level zapcore.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			logger.Log(level, fmt.Sprintf("ro.Next: %v", value))
-		},
-		func(ctx context.Context, err error) {
-			logger.Log(level, fmt.Sprintf("ro.Error: %s", err.Error()))
-		},
-		func(ctx context.Context) {
-			logger.Log(level, "ro.Complete")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func LogWithNotification[T any](logger *zap.Logger, level zapcore.Level) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapWithContext(
-		func(ctx context.Context, value T) {
-			logger.Log(level, "ro.Next", zap.Any("value", value))
-		},
-		func(ctx context.Context, err error) {
-			logger.Log(level, "ro.Error", zap.Error(err))
-		},
-		func(ctx context.Context) {
-			logger.Log(level, "ro.Complete")
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func FatalOnError[T any](logger *zap.Logger) func(ro.Observable[T]) ro.Observable[T] {
-	return ro.TapOnErrorWithContext[T](
-		func(ctx context.Context, err error) {
-			logger.Fatal("ro.Error", zap.Error(err))
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }

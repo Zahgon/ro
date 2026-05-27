@@ -17,7 +17,6 @@ package ro
 import (
 	"context"
 	"fmt"
-	"log"
 )
 
 var (
@@ -48,17 +47,25 @@ var (
 )
 
 // IgnoreOnUnhandledError is the default implementation of `OnUnhandledError`.
-func IgnoreOnUnhandledError(ctx context.Context, err error) {}
+func IgnoreOnUnhandledError(ctx context.Context, err error) {
+	_ = "STUB: not implemented"
 
-// IgnoreOnDroppedNotification is the default implementation of `OnDroppedNotification`.
-func IgnoreOnDroppedNotification(ctx context.Context, notification fmt.Stringer) {}
+	// IgnoreOnDroppedNotification is the default implementation of `OnDroppedNotification`.
+	return
+}
 
-// DefaultOnUnhandledError is the default implementation of `OnUnhandledError`.
+func IgnoreOnDroppedNotification(ctx context.Context, notification fmt.Stringer) {
+	_ = "STUB: not implemented"
+
+	// DefaultOnUnhandledError is the default implementation of `OnUnhandledError`.
+	return
+}
+
 func DefaultOnUnhandledError(ctx context.Context, err error) {
-	if err != nil {
-		// bearer:disable go_lang_logger_leak
-		log.Printf("samber/ro: unhandled error: %s\n", err.Error())
-	}
+	_ = "STUB: not implemented"
+
+	// bearer:disable go_lang_logger_leak
+	return
 }
 
 var _ fmt.Stringer = (*Notification[int])(nil) // see below
@@ -68,8 +75,9 @@ var _ fmt.Stringer = (*Notification[int])(nil) // see below
 // Since we cannot assign a generic callback to `OnDroppedNotification`,
 // we had to use a `fmt.Stringer` instead a `Notification[T any]`.
 func DefaultOnDroppedNotification(ctx context.Context, notification fmt.Stringer) {
+	_ = "STUB: not implemented"
 	// bearer:disable go_lang_logger_leak
-	log.Printf("samber/ro: dropped notification: %s\n", notification.String())
+	return
 }
 
 // Kind represents the kind of a Notification.
@@ -77,18 +85,7 @@ func DefaultOnDroppedNotification(ctx context.Context, notification fmt.Stringer
 type Kind uint8
 
 // String returns the string representation of a Kind.
-func (k Kind) String() string {
-	switch k {
-	case KindNext:
-		return "Next"
-	case KindError:
-		return "Error"
-	case KindComplete:
-		return "Complete"
-	}
-
-	panic("you shall not pass")
-}
+func (k Kind) String() string { _ = "STUB: not implemented"; return "" }
 
 // Kind constants.
 const (
@@ -106,94 +103,33 @@ type Notification[T any] struct {
 	Err   error
 }
 
-func (n Notification[T]) String() string {
-	switch n.Kind {
-	case KindNext:
-		return fmt.Sprintf("Next(%+v)", n.Value)
-	case KindError:
-		if n.Err == nil {
-			return "Error(nil)"
-		}
-
-		return fmt.Sprintf("Error(%s)", n.Err.Error())
-	case KindComplete:
-		return "Complete()"
-	}
-
-	panic("you shall not pass")
-}
+func (n Notification[T]) String() string { _ = "STUB: not implemented"; return "" }
 
 // NewNotificationNext creates a new Notification with a Next value.
-func NewNotificationNext[T any](value T) Notification[T] {
-	return Notification[T]{
-		Kind:  KindNext,
-		Value: value,
-	}
-}
+func NewNotificationNext[T any](value T) Notification[T] { _ = "STUB: not implemented"; return nil }
 
 // NewNotificationError creates a new Notification with an Error.
-func NewNotificationError[T any](err error) Notification[T] {
-	return Notification[T]{
-		Kind: KindError,
-		Err:  err,
-	}
-}
+func NewNotificationError[T any](err error) Notification[T] { _ = "STUB: not implemented"; return nil }
 
 // NewNotificationComplete creates a new Notification with a Complete signal.
-func NewNotificationComplete[T any]() Notification[T] {
-	return Notification[T]{
-		Kind: KindComplete,
-	}
-}
+func NewNotificationComplete[T any]() Notification[T] { _ = "STUB: not implemented"; return nil }
 
 func processNotification[T any](n Notification[T], onNext func(T), onError func(error), onComplete func()) bool {
-	switch n.Kind {
-	case KindNext:
-		onNext(n.Value)
-		return true
-	case KindError:
-		onError(n.Err)
-		return false
-	case KindComplete:
-		onComplete()
-		return false
-	}
-
-	panic("you shall not pass")
+	_ = "STUB: not implemented"
+	return false
 }
 
 func processNotificationWithContext[T any](ctx context.Context, n Notification[T], onNext func(context.Context, T), onError func(context.Context, error), onComplete func(context.Context)) bool {
-	switch n.Kind {
-	case KindNext:
-		onNext(ctx, n.Value)
-		return true
-	case KindError:
-		onError(ctx, n.Err)
-		return false
-	case KindComplete:
-		onComplete(ctx)
-		return false
-	}
-
-	panic("you shall not pass")
+	_ = "STUB: not implemented"
+	return false
 }
 
 func processNotificationWithObserver[T any](n Notification[T], destination Observer[T]) bool {
-	return processNotificationWithContext(
-		context.Background(),
-		n,
-		destination.NextWithContext,
-		destination.ErrorWithContext,
-		destination.CompleteWithContext,
-	)
+	_ = "STUB: not implemented"
+	return false
 }
 
 func processNotificationWithObserverAndContext[T any](ctx context.Context, n Notification[T], destination Observer[T]) bool {
-	return processNotificationWithContext(
-		ctx,
-		n,
-		destination.NextWithContext,
-		destination.ErrorWithContext,
-		destination.CompleteWithContext,
-	)
+	_ = "STUB: not implemented"
+	return false
 }

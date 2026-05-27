@@ -15,7 +15,6 @@
 package ropsi
 
 import (
-	"context"
 	"time"
 
 	psinotifier "github.com/samber/go-psi"
@@ -24,25 +23,6 @@ import (
 
 // NewPSINotifier creates an observable that emits PSI (Pressure Stall Information) statistics at regular intervals.
 func NewPSINotifier(interval time.Duration) ro.Observable[psinotifier.PSIStatsResource] {
-	return ro.NewUnsafeObservableWithContext(func(subscriberCtx context.Context, destination ro.Observer[psinotifier.PSIStatsResource]) ro.Teardown {
-		sub := ro.Interval(interval).
-			SubscribeWithContext(
-				subscriberCtx,
-				ro.NewObserverWithContext(
-					func(ctx context.Context, value int64) {
-						stats, err := psinotifier.AllPSIStats()
-						if err != nil {
-							destination.ErrorWithContext(ctx, err)
-							return
-						}
-
-						destination.NextWithContext(ctx, stats)
-					},
-					destination.ErrorWithContext,
-					destination.CompleteWithContext,
-				),
-			)
-
-		return sub.Unsubscribe
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

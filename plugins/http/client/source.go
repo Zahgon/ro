@@ -15,8 +15,6 @@
 package rohttpclient
 
 import (
-	"context"
-	"encoding/json"
 	"net/http"
 
 	"github.com/samber/ro"
@@ -28,36 +26,11 @@ import (
 //
 // Don't forget to call resp.Body.Close() when you're done with the response.
 func HTTPRequest(req *http.Request, client *http.Client) ro.Observable[*http.Response] {
-	if client == nil {
-		client = http.DefaultClient
-	}
-
-	return ro.NewObservable(func(destination ro.Observer[*http.Response]) ro.Teardown {
-		ctx, cancel := context.WithCancel(req.Context())
-
-		go func() {
-			req = req.WithContext(ctx)
-
-			res, err := client.Do(req)
-			if err != nil {
-				destination.ErrorWithContext(ctx, err)
-				return
-			}
-
-			destination.NextWithContext(ctx, res)
-			destination.CompleteWithContext(ctx)
-		}()
-
-		return (func())(cancel)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func HTTPRequestJSON[T any](req *http.Request, client *http.Client) ro.Observable[T] {
-	return ro.MapErr(func(res *http.Response) (T, error) {
-		defer res.Body.Close()
-
-		var t T
-		err := json.NewDecoder(res.Body).Decode(&t)
-		return t, err
-	})(HTTPRequest(req, client))
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -16,9 +16,6 @@ package rolicense
 
 import (
 	_ "embed"
-	"encoding/json"
-	"fmt"
-	"strings"
 	"time"
 
 	"github.com/samber/ro/internal/xatomic"
@@ -67,58 +64,33 @@ type License struct {
 }
 
 // IsExpired checks if a license has expired
-func (l *License) IsExpired() bool {
-	return !l.ExpiresAt.IsZero() && time.Now().After(l.ExpiresAt)
-}
+func (l *License) IsExpired() bool { _ = "STUB: not implemented"; return false }
 
 // GenerateLicense creates a signed license string using the provided private key
 func GenerateLicense(license *License, privateKeyPEM []byte) (string, error) {
+	_ = "STUB: not implemented"
 	// Parse the private key using the keys package
-	privateKey, err := UnmarshalPrivateKey(privateKeyPEM)
-	if err != nil {
-		return "", fmt.Errorf("failed to parse private key: %w", err)
-	}
-
-	// Serialize the license to JSON
-	licenseData, err := json.Marshal(license)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal license: %w", err)
-	}
-
-	// Encode the container
-	encodedLicense, err := EncodeDataWithPrivateKey(licenseData, privateKey)
-	if err != nil {
-		return "", fmt.Errorf("failed to encode license container: %w", err)
-	}
-
-	// Add the license prefix
-	return v0LicensePrefix + encodedLicense, nil
+	return "", nil
 }
+
+// Serialize the license to JSON
+
+// Encode the container
+
+// Add the license prefix
 
 // ParseLicense decodes and verifies a license string using the embedded public key
 func ParseLicense(key string) (*License, error) {
+	_ = "STUB: not implemented"
 	// Check if the license has the correct prefix
-	if !strings.HasPrefix(key, v0LicensePrefix) {
-		return nil, fmt.Errorf("invalid license format: missing prefix")
-	}
-
-	// Remove the prefix and decode the container
-	key = key[len(v0LicensePrefix):]
-
-	// Decode the license data
-	data, err := DecodeDataWithPublicKey(key, embeddedPublicKey)
-	if err != nil {
-		return nil, fmt.Errorf("failed to decode license container: %w", err)
-	}
-
-	// Unmarshal the license
-	var license License
-	if err := json.Unmarshal(data, &license); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal license: %w", err)
-	}
-
-	return &license, nil
+	return nil, nil
 }
+
+// Remove the prefix and decode the container
+
+// Decode the license data
+
+// Unmarshal the license
 
 // On expiration, the license will be set to nil on the next call to GetLicense().
 var currentLicense = xatomic.NewPointer[License](nil)
@@ -126,45 +98,19 @@ var currentLicense = xatomic.NewPointer[License](nil)
 // SetLicense sets the current license.
 // On invalid license or expired license, an error is returned. This error might be
 // ignored by the caller, since the license is not critical to the application in some cases.
-func SetLicense(key string) (err error) {
-	license, err := ParseLicense(key)
-	if err != nil {
-		return fmt.Errorf("failed to parse license: %w", err)
-	}
-
-	if license.IsExpired() {
-		return fmt.Errorf("license has expired")
-	}
-
-	currentLicense.Store(license)
-	time.AfterFunc(time.Until(license.ExpiresAt), func() {
-		currentLicense.Store(defaultLicense)
-	})
-
-	return nil
-}
+func SetLicense(key string) (err error) { _ = "STUB: not implemented"; return nil }
 
 // GetLicense returns the current license.
 // If the license is expired, it will be set to nil on the next call to GetLicense().
 // Warning: calling this function too often might cause performance issues.
-func GetLicense() *License {
-	license := currentLicense.Load()
-	if license == nil {
-		return defaultLicense
-	}
+func GetLicense() *License { _ = "STUB: not implemented"; return nil }
 
-	// Commented, because it's too expensive to call IsExpired() too often.
-	// if license.IsExpired() {
-	// 	currentLicense.Store(defaultLicense)
-	// 	return defaultLicense
-	// }
-
-	return license
-}
+// Commented, because it's too expensive to call IsExpired() too often.
+// if license.IsExpired() {
+// 	currentLicense.Store(defaultLicense)
+// 	return defaultLicense
+// }
 
 // IsEnterpriseEnabled returns true if the current license is an enterprise license.
 // Warning: calling this function too often might cause performance issues.
-func IsEnterpriseEnabled() bool {
-	license := GetLicense()
-	return license != nil && license.Type == TypeEnterprise
-}
+func IsEnterpriseEnabled() bool { _ = "STUB: not implemented"; return false }

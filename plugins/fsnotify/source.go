@@ -15,63 +15,16 @@
 package rofsnotify
 
 import (
-	"context"
-
 	"github.com/fsnotify/fsnotify"
 	"github.com/samber/ro"
 )
 
 // NewFSListener creates a file system watcher that emits file system events.
 func NewFSListener(paths ...string) ro.Observable[fsnotify.Event] {
-	return ro.NewUnsafeObservableWithContext(func(ctx context.Context, destination ro.Observer[fsnotify.Event]) ro.Teardown {
-		watcher, err := fsnotify.NewWatcher()
-		if err != nil {
-			destination.ErrorWithContext(ctx, err)
-			return nil
-		}
-
-		// Start listening for events.
-		go func() {
-			for _, path := range paths {
-				// Add a path.
-				err = watcher.Add(path)
-				if err != nil {
-					destination.ErrorWithContext(ctx, err)
-					return
-				}
-			}
-
-			for {
-				select {
-				case event, ok := <-watcher.Events:
-					if ok {
-						destination.NextWithContext(ctx, event)
-					} else {
-						destination.CompleteWithContext(ctx)
-						return
-					}
-
-				case err, ok := <-watcher.Errors:
-					if ok {
-						destination.ErrorWithContext(ctx, err)
-					} else {
-						destination.CompleteWithContext(ctx)
-					}
-					return
-
-				case <-ctx.Done():
-					if ctx.Err() != nil {
-						destination.ErrorWithContext(ctx, ctx.Err())
-					} else {
-						destination.CompleteWithContext(ctx)
-					}
-					return
-				}
-			}
-		}()
-
-		return func() {
-			_ = watcher.Close()
-		}
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Start listening for events.
+
+// Add a path.

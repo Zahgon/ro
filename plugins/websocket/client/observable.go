@@ -35,12 +35,6 @@ type WebsocketObservableConfig[In any, Out any] struct {
 
 // NewWebsocketObservable creates a websocket observable that receives messages from a websocket endpoint.
 func NewWebsocketObservable[Out any](config WebsocketObservableConfig[struct{}, Out]) ro.Observable[Out] {
-	return NewWebsocketSubject(WebsocketSubjectConfig[struct{}, Out]{
-		URL:             config.URL,
-		Headers:         config.Headers,
-		Serializer:      func(value struct{}) ([]byte, error) { return []byte{}, nil },
-		Deserializer:    config.Deserializer,
-		Dialer:          config.Dialer,
-		OutputConnector: config.OutputConnector,
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
